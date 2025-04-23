@@ -674,6 +674,8 @@ Com sua arquitetura multi-banco de dados, a plataforma demonstra como diferentes
 
 O projeto está em constante evolução, com novas funcionalidades planejadas para tornar a plataforma ainda mais completa e útil no dia a dia do produtor rural.
 
+[Leia a pesquisa completa ](setup/search.md)
+
 ## 🗃 Histórico de lançamentos
 
 * 1.0.0 - 27/03/2025
