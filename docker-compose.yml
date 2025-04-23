@@ -9,8 +9,12 @@ services:
       - FLASK_APP=run.py
       - FLASK_ENV=development
       - MONGO_URI=mongodb://mongo:27017/farmtech
+      - SQL_DATABASE_URI=mysql://farmtech:senha@mysql/farmtech_sensors
+      - ORACLE_DATABASE_URI=oracle+cx_oracle://system:senha@oracle:1521/XE
     depends_on:
       - mongo
+      - mysql
+      - oracle
     volumes:
       - .:/app
 
@@ -21,5 +25,35 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootsenha
+      - MYSQL_DATABASE=farmtech_sensors
+      - MYSQL_USER=farmtech
+      - MYSQL_PASSWORD=senha
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  oracle:
+    image: container-registry.oracle.com/database/express:latest
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      - ORACLE_PWD=senha
+      - ORACLE_CHARACTERSET=AL32UTF8
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "sqlplus", "-L", "system/senha@//localhost:1521/XE", "AS", "SYSDBA"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 volumes:
   mongodb_data:
+  mysql_data:
+  oracle_data:

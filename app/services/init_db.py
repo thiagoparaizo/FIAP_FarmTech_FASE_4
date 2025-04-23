@@ -1,11 +1,13 @@
 from app.models.cultura import Cultura
 from app.models.campo import Campo
 from pymongo import MongoClient
+from app.models.sensor_models import Base
+from sqlalchemy import create_engine
 from datetime import datetime
 
 def inicializar_banco_dados(mongo_uri):
     """
-    Inicializa o banco de dados com dados de exemplo quando a aplicação é executada pela primeira vez
+    Inicializa o banco de dados MongoDB com dados de exemplo quando a aplicação é executada pela primeira vez
     
     Args:
         mongo_uri (str): URI de conexão com o MongoDB
@@ -15,10 +17,10 @@ def inicializar_banco_dados(mongo_uri):
     
     # Verificar se já existem dados no banco de dados
     if db.culturas.count_documents({}) > 0 and db.campos.count_documents({}) > 0:
-        print("Banco de dados já inicializado.")
+        print("Banco de dados MongoDB já inicializado.")
         return
     
-    print("Inicializando banco de dados com dados de exemplo...")
+    print("Inicializando banco de dados MongoDB com dados de exemplo...")
     
     # Limpar coleções existentes (garantir que não há dados duplicados)
     db.culturas.delete_many({})
@@ -95,4 +97,21 @@ def inicializar_banco_dados(mongo_uri):
     
     db.campos.insert_one(campo_mandioca_circular.to_dict())
     
-    print("Inicialização do banco de dados concluída.")
+    print("Inicialização do banco de dados MongoDB concluída.")
+
+def inicializar_banco_dados_relacional(sql_database_uri):
+    """
+    Inicializa o banco de dados relacional criando as tabelas necessárias
+    
+    Args:
+        sql_database_uri (str): URI de conexão com o banco de dados SQL
+    """
+    print("Inicializando banco de dados relacional...")
+    
+    # Criar engine com a URI fornecida
+    engine = create_engine(sql_database_uri)
+    
+    # Criar todas as tabelas definidas no Base
+    Base.metadata.create_all(engine)
+    
+    print("Tabelas do banco de dados relacional criadas com sucesso!")

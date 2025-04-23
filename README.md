@@ -1,12 +1,44 @@
-# FIAP - FarmTech Py - Documentação
+# FIAP - Faculdade de Informática e Administração Paulista
 
-# Documentação Detalhada da Aplicação FarmTech Solutions
+<p align="center">
+<a href= "https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+</p>
 
-## 1. Visão Geral
+<br>
 
-A FarmTech Solutions é uma aplicação web desenvolvida para a gestão agrícola digital, com foco na gestão de culturas e campos, cálculos de área, insumos, irrigação e plantio. A aplicação foi construída utilizando Python com Flask no backend, MongoDB para persistência de dados, e HTML/CSS/JavaScript para o frontend.
+# EasyAgro - FarmTechSolutions
+
+## Nome do grupo
+
+## 👨‍🎓 Integrantes: 
+- <a href="https://www.linkedin.com/in/thiagoparaizo/?originalSubdomain=br">Thiago Paraizo</a>
+
+## 👩‍🏫 Professores:
+### Tutor(a) 
+- <a href="https://www.linkedin.com/company/inova-fusca">Leonardo Ruiz Orabona</a>
+### Coordenador(a)
+- <a href="https://www.linkedin.com/company/inova-fusca">Andre Godoy Chiovato</a>
+
+
+## 📜 Descrição
+
+O EasyAgro é uma aplicação web desenvolvida para a gestão agrícola digital, com foco na gestão de culturas e campos, cálculos de área, insumos, irrigação e plantio, e sensoriamento. A aplicação serve como uma solução completa para pequenos produtores rurais, agricultores familiares e cooperativas, permitindo o **controle produtivo, gestão de dados e apoio à decisão**.
+
+Esta aplicação web leve implementada em Python integra controle de produção, rastreabilidade, análise de dados, monitoramento por sensores e apoio à gestão em uma plataforma única e amigável. Ela funciona como uma *porta de entrada digital* para o agricultor familiar, organizando suas informações e conectando-o a benefícios, sejam conhecimentos ou créditos.
 
 ## 2. Arquitetura da Aplicação
+
+A aplicação utiliza uma arquitetura de múltiplos bancos de dados:
+
+- **MongoDB**: Armazenamento NoSQL para dados de culturas e campos
+- **MySQL**: Banco relacional para dados de sensores e leituras
+- **Oracle**: Banco relacional para catálogo de fabricantes e modelos de sensores
+
+Esta abordagem híbrida permite aproveitar as vantagens de cada tecnologia:
+
+- Flexibilidade do MongoDB para estruturas de dados variáveis
+- Integridade referencial do MySQL para dados relacionados
+- Robustez do Oracle para dados corporativos
 
 ### 2.1 Estrutura de Diretórios
 
@@ -19,18 +51,24 @@ FIAP-CAP1_FARMTECH_PY/
 │   ├── routes/
 │   │   ├── __init__.py
 │   │   ├── web_routes.py       # Rotas para interface web
-│   │   └── api_routes.py       # Endpoints da API
+│   │   ├── api_routes.py       # Endpoints da API
+│   │   ├── sensor_routes.py    # Rotas para o sistema de sensores
+│   │   └── catalogo_routes.py  # Rotas para o catálogo de fabricantes/modelos
 │   │
 │   ├── models/
 │   │   ├── __init__.py
-│   │   ├── cultura.py          # Modelo para culturas
-│   │   └── campo.py            # Modelo para campos/áreas
+│   │   ├── cultura.py          # Modelo para culturas (MongoDB)
+│   │   ├── campo.py            # Modelo para campos/áreas (MongoDB)
+│   │   ├── sensor_models.py    # Modelos para sensores (MySQL)
+│   │   └── oracle_models.py    # Modelos para catálogo (Oracle)
 │   │
 │   ├── services/
 │   │   ├── __init__.py
 │   │   ├── calculo_area.py     # Cálculo de áreas
 │   │   ├── calculo_insumos.py  # Cálculo de insumos
 │   │   ├── db_service.py       # Interação com MongoDB
+│   │   ├── sql_db_service.py   # Interação com MySQL
+│   │   ├── oracle_db_service.py # Interação com Oracle
 │   │   └── init_db.py          # Inicialização de dados
 │   │
 │   ├── static/
@@ -40,7 +78,7 @@ FIAP-CAP1_FARMTECH_PY/
 │   │
 │   └── templates/
 │       ├── base.html           # Template base
-        ├── calculadora.html    # Calculadora Agrícola
+│       ├── calculadora.html    # Calculadora Agrícola
 │       ├── campo_detalhes.html # Detalhes do campo
 │       ├── campo_form.html     # Formulário de campo
 │       ├── campos.html         # Lista de campos
@@ -48,7 +86,17 @@ FIAP-CAP1_FARMTECH_PY/
 │       ├── cultura_form.html   # Formulário de cultura
 │       ├── index.html          # Página inicial
 │       ├── culturas.html       # Lista de culturas
-│       ├── modo_simplificado.html   # Modo Simplificado - Interface que simula um terminal (não implementado completamente)
+│       ├── sensores/           # Templates para sistema de sensores
+│       │   ├── index.html      # Lista de sensores
+│       │   ├── detalhe_sensor.html # Detalhes do sensor
+│       │   ├── sensor_form.html    # Formulário de sensor
+│       │   ├── sensores_campo.html # Sensores por campo
+│       │   └── relatorios.html     # Relatórios de sensores
+│       ├── catalogo/           # Templates para catálogo
+│       │   ├── index.html      # Catálogo de sensores
+│       │   ├── detalhe_fabricante.html # Detalhes do fabricante
+│       │   └── detalhe_modelo.html     # Detalhes do modelo
+│       └── modo_simplificado.html # Modo Simplificado - Interface terminal
 │
 ├── cli/
 │   └── cli_app.py              # Interface de linha de comando
@@ -66,25 +114,29 @@ FIAP-CAP1_FARMTECH_PY/
 1. **Backend (Flask)**
     - Fornece APIs RESTful para processamento de dados
     - Gerencia a lógica de negócios e cálculos
-    - Interage com o banco de dados MongoDB
+    - Interação com múltiplos bancos de dados
+    - Processamento de dados de sensores
 2. **Frontend (HTML/CSS/JavaScript)**
     - Interface web para interação com o usuário
     - Visualizações gráficas com Plotly
-    - Formulários para entrada de dados
-3. **Banco de Dados (MongoDB)**
-    - Armazena informações sobre culturas agrícolas
-    - Armazena informações sobre campos/áreas de plantio
-    - Armazena resultados de cálculos para referência futura
+    - Dashboards para monitoramento de sensores
+3. **Banco de Dados**
+    - **MongoDB**: Culturas e campos
+    - **MySQL**: Sensores e leituras
+    - **Oracle**: Catálogo de fabricantes e modelos
 4. **CLI (Interface de Linha de Comando)**
     - Fornece acesso às funcionalidades via terminal
     - Alternativa à interface web para operações rápidas
 
 ## 3. Modelos de Dados
 
-### 3.1 Cultura
+### 3.1 Modelos MongoDB (NoSQL)
+
+### 3.1.1 Cultura
 
 ```json
 
+json
 {
   "_id": "unique_id_cultura",
   "nome_cultura": "Mandioca",
@@ -138,10 +190,11 @@ FIAP-CAP1_FARMTECH_PY/
 
 ```
 
-### 3.2 Campo
+### 3.1.2 Campo
 
 ```json
 
+json
 {
   "_id": "unique_id_campo",
   "nome_produtor": "Nome do Produtor",
@@ -170,6 +223,117 @@ FIAP-CAP1_FARMTECH_PY/
     }
   }
 }
+
+```
+
+### 3.2 Modelos MySQL (Relacional - Sensores)
+
+### 3.2.1 Sensor
+
+```python
+
+python
+class Sensor(Base):
+    __tablename__ = 'sensor'
+
+    id = Column(Integer, primary_key=True)
+    tipo = Column(String(50), nullable=False)# S1, S2, S3
+    modelo = Column(String(100))
+    data_instalacao = Column(Date)
+    ativo = Column(Boolean, default=True)
+    ultima_manutencao = Column(DateTime)
+
+    posicao = relationship("PosicaoSensor", back_populates="sensor", uselist=False)
+    leituras = relationship("LeituraSensor", back_populates="sensor")
+    alertas = relationship("AlertaSensor", back_populates="sensor")
+    historicos = relationship("HistoricoSensor", back_populates="sensor")
+
+```
+
+### 3.2.2 PosicaoSensor
+
+```python
+
+python
+class PosicaoSensor(Base):
+    __tablename__ = 'posicao_sensor'
+
+    id = Column(Integer, primary_key=True)
+    sensor_id = Column(Integer, ForeignKey('sensor.id'))
+    campo_id = Column(String(50), nullable=False)# ID do MongoDB
+    latitude = Column(Float)
+    longitude = Column(Float)
+    profundidade = Column(Float)
+
+    sensor = relationship("Sensor", back_populates="posicao")
+
+```
+
+### 3.2.3 LeituraSensor
+
+```python
+
+python
+class LeituraSensor(Base):
+    __tablename__ = 'leitura_sensor'
+
+    id = Column(Integer, primary_key=True)
+    sensor_id = Column(Integer, ForeignKey('sensor.id'))
+    data_hora = Column(DateTime, nullable=False, default=datetime.utcnow)
+    valor = Column(Text, nullable=False)# Armazena valores numéricos ou JSON
+    unidade = Column(String(20), nullable=False)
+    valido = Column(Boolean, default=True)
+
+    sensor = relationship("Sensor", back_populates="leituras")
+
+```
+
+### 3.2.4 Outras Entidades MySQL
+
+- **AplicacaoRecurso**: Registro de aplicações de recursos (água, fertilizantes)
+- **RecomendacaoAutomatica**: Recomendações geradas pelo sistema
+- **AlertaSensor**: Alertas sobre condições anormais
+- **HistoricoSensor**: Histórico estatístico de leituras por período
+
+### 3.3 Modelos Oracle (Relacional - Catálogo)
+
+### 3.3.1 FabricanteSensor
+
+```python
+
+python
+class FabricanteSensor(OracleBase):
+    __tablename__ = 'fabricante_sensor'
+
+    id = Column(Integer, primary_key=True)
+    nome = Column(String(100), nullable=False)
+    pais = Column(String(50))
+    website = Column(String(255))
+    descricao = Column(String(500))
+
+# Relacionamento M:N com ModeloSensor
+    modelos = relationship("ModeloSensor", secondary=fabricante_modelo, back_populates="fabricantes")
+
+```
+
+### 3.3.2 ModeloSensor
+
+```python
+
+python
+class ModeloSensor(OracleBase):
+    __tablename__ = 'modelo_sensor'
+
+    id = Column(Integer, primary_key=True)
+    nome = Column(String(100), nullable=False)
+    tipo = Column(String(50), nullable=False)# S1, S2, S3
+    precisao = Column(String(50))
+    faixa_medicao = Column(String(100))
+    preco_referencia = Column(String(50))
+    descricao = Column(String(500))
+
+# Relacionamento M:N com FabricanteSensor
+    fabricantes = relationship("FabricanteSensor", secondary=fabricante_modelo, back_populates="modelos")
 
 ```
 
@@ -222,14 +386,36 @@ Suporta cálculos para diferentes geometrias:
 - Visualização do padrão de plantio
 - Informações sobre o período recomendado para plantio
 
-### 4.4 Visualizações
+### 4.4 Sistema de Sensores
+
+- **Cadastro e monitoramento** de sensores em campos
+- Três tipos de sensores:
+    - **S1**: Sensores de umidade do solo
+    - **S2**: Sensores de pH
+    - **S3**: Sensores de nutrientes (N, P, K)
+- **Registro de leituras** manuais ou automáticas
+- **Análise de dados** e geração de estatísticas
+- **Recomendações automáticas** com base nas leituras
+- **Alertas** para condições anormais
+- **Visualização** de leituras em gráficos
+
+### 4.5 Catálogo de Equipamentos
+
+- Consulta de **fabricantes** de sensores
+- Visualização de **modelos disponíveis** por tipo
+- Informações técnicas sobre cada modelo
+- Associação entre fabricantes e modelos
+
+### 4.6 Visualizações
 
 - Gráficos de área para diferentes geometrias
 - Gráficos de distribuição de NPK
 - Visualização de linhas de irrigação
 - Padrões de espaçamento para plantio
+- Gráficos de leituras de sensores
+- Dashboards de monitoramento
 
-### 4.5 Modo Terminal
+### 4.7 Modo Terminal
 
 - Interface de linha de comando para acesso às funcionalidades
 - Comandos para listar, visualizar e calcular dados
@@ -259,14 +445,26 @@ Suporta cálculos para diferentes geometrias:
 - `POST /api/calculos/insumos`: Calcula insumos com base na cultura e área
 - `POST /api/calculos/plantas`: Calcula a quantidade de plantas com base na cultura e área
 
+### 5.4 API de Sensores
+
+- `GET /sensores/api/sensores`: Lista todos os sensores
+- `GET /sensores/api/relatorio/sensor/<id>`: Gera relatório para um sensor
+- `GET /sensores/api/relatorio/campo/<id>`: Gera relatório para um campo
+- `POST /sensores/api/analisar-campo/<id>`: Analisa dados de sensores e gera recomendações
+- `POST /sensores/api/aplicar-recomendacao/<id>`: Registra aplicação de uma recomendação
+- `POST /sensores/api/registrar-leitura`: Registra uma nova leitura de sensor
+- `POST /sensores/api/simular-leituras`: Simula leituras para testes (apenas em modo DEBUG)
+
 ## 6. Tecnologias Utilizadas
 
 ### 6.1 Backend
 
 - **Python**: Linguagem de programação principal
 - **Flask**: Framework web para o backend
+- **SQLAlchemy**: ORM para bancos de dados relacionais
 - **PyMongo**: Interface para MongoDB
-- **NumPy**: Processamento numérico para cálculos
+- **cx_Oracle**: Interface para Oracle Database
+- **NumPy/Pandas**: Processamento numérico para cálculos
 
 ### 6.2 Frontend
 
@@ -278,6 +476,8 @@ Suporta cálculos para diferentes geometrias:
 ### 6.3 Armazenamento de Dados
 
 - **MongoDB**: Banco de dados NoSQL para armazenamento flexível de documentos
+- **MySQL**: Banco de dados relacional para sensores e leituras
+- **Oracle Database**: Banco de dados relacional para catálogo de equipamentos
 
 ### 6.4 Implantação
 
@@ -290,22 +490,25 @@ Suporta cálculos para diferentes geometrias:
 
 - Docker e Docker Compose
 - Acesso à internet para download de dependências
+- Pelo menos 4GB de RAM para execução do Oracle Database
 
-### 7.2 Passos para Implantação
+### 7.2 Passos para Implantação com Docker
 
 1. Clone o repositório:
     
-    ```
+    ```bash
     
+    bash
     git clone https://github.com/thiagoparaizo/FIAP_CAP1_FarmTech_py.git
-    cd farmtech-app
+    cd FIAP_CAP1_FarmTech_py
     
     ```
     
 2. Execute com Docker Compose:
     
-    ```
+    ```bash
     
+    bash
     docker-compose up -d
     
     ```
@@ -321,114 +524,141 @@ Suporta cálculos para diferentes geometrias:
 
 ### 7.3 Implantação Manual
 
-1. Instale as dependências:
+1. Configure os bancos de dados:
+    
+    ```bash
+    
+    bash
+    # Iniciar MongoDB
+    docker run --name farmtech-mongo -p 27017:27017 -d mongo:latest
+    
+    # Iniciar MySQL
+    docker run --name farmtech-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootsenha -e MYSQL_DATABASE=farmtech_sensors -e MYSQL_USER=farmtech -e MYSQL_PASSWORD=senha -d mysql:8.0
+    
+    # Iniciar Oracle (opcional)
+    docker run --name farmtech-oracle -p 1521:1521 -p 5500:5500 -e ORACLE_PWD=senha -e ORACLE_CHARACTERSET=AL32UTF8 -d container-registry.oracle.com/database/express:latest
     
     ```
     
+2. Crie um ambiente virtual e instale as dependências:
+    
+    ```bash
+    
+    bash
+    python -m venv venv
+    source venv/bin/activate# No Windows: venv\Scripts\activate
     pip install -r requirements.txt
     
     ```
     
-2. Configure o MongoDB:
+3. Configure as variáveis de ambiente:
+    
+    ```bash
+    
+    bash
+    # Linux/Mac
+    export FLASK_APP=run.py
+    export FLASK_ENV=development
+    export MONGO_URI=mongodb://localhost:27017/farmtech
+    export SQL_DATABASE_URI=mysql://farmtech:senha@localhost/farmtech_sensors
+    export ORACLE_DATABASE_URI=oracle+cx_oracle://system:senha@localhost:1521/XE
+    
+    # Windows (PowerShell)
+    $env:FLASK_APP = "run.py"
+    $env:FLASK_ENV = "development"
+    $env:MONGO_URI = "mongodb://localhost:27017/farmtech"
+    $env:SQL_DATABASE_URI = "mysql://farmtech:senha@localhost/farmtech_sensors"
+    $env:ORACLE_DATABASE_URI = "oracle+cx_oracle://system:senha@localhost:1521/XE"
     
     ```
     
-    export MONGO_URI="mongodb://localhost:27017/farmtech"
+4. Execute a aplicação:
+    
+    ```bash
+    
+    bash
+    flask run
     
     ```
     
-3. Execute a aplicação:
-    
-    ```
-    
-    python run.py
-    
-    ```
-    
 
-## 8. Guia de Uso
+## 8. Próximos Desenvolvimentos
 
-### 8.1 Interface Web
+O EasyAgro está em evolução constante, com módulos adicionais planejados para as próximas versões:
 
-1. **Página Inicial**:
-    - Visão geral das culturas e campos cadastrados
-    - Acesso rápido às principais funcionalidades
-2. **Gerenciamento de Culturas**:
-    - Cadastre culturas com informações agronômicas detalhadas
-    - Visualize, edite ou remova culturas existentes
-3. **Gerenciamento de Campos**:
-    - Cadastre campos com diferentes geometrias
-    - Associe campos a culturas específicas
-    - Visualize cálculos automáticos de área e insumos
-4. **Calculadoras**:
-    - Utilize as calculadoras específicas para diferentes necessidades
-    - Visualize resultados em gráficos interativos
-5. Modo Simplificado (Simulação de Terminal no Browser):
-    - Utilização de algumas funcioanlidades a partir de um terminal simulado.
-    
+### 8.1 Registro de Atividades (Caderno de Campo Digital)
 
-### 8.2 Modo Terminal
+- **Registro de Plantio**: dados sobre cultura, data, área, variedade e quantidade
+- **Registro de Tratos e Insumos**: aplicações de fertilizantes, defensivos e ocorrências
+- **Registro de Colheita**: data, quantidade e rastreabilidade por lote
+- **Registro de Vendas**: data, produto, quantidade, preço e comprador
 
-Acesse a aplicação via terminal:
+### 8.2 Análise Integrada
 
-```bash
+- **Produtividade**: cálculos por hectare e cultura
+- **Custos vs. Receitas**: análise financeira por safra
+- **Calendário de Atividades**: linha do tempo da safra
+- **Alertas Automáticos**: notificações para colheita, plantio e manutenção
+- **Indicadores de Perdas**: comparação entre colhido e previsto
+- **Relatório Climático**: integração com dados meteorológicos
 
-python cli/cli_app.py
+### 8.3 Expansão de IoT
 
-```
+- **Monitoramento Ambiental Ampliado**: mais tipos de sensores
+- **Atuadores Automatizados**: controle remoto de irrigação e equipamentos
+- **Integração com Drones**: mapeamento aéreo e detecção de problemas
+- **Alertas em Tempo Real**: notificação imediata para condições críticas
 
-Comandos disponíveis:
+### 8.4 Módulo de Crédito e Documentos
 
-- `help`: Exibe ajuda sobre comandos disponíveis
-- `list culturas`: Lista culturas cadastradas
-- `list campos`: Lista campos cadastrados
-- `show cultura [id]`: Mostra detalhes de uma cultura
-- `show campo [id]`: Mostra detalhes de um campo
-- `calc area [tipo] [params]`: Calcula área
-- `calc insumos [cultura] [area]`: Calcula insumos
-- `exit`: Sai do programa
+- **Ficha do Produtor**: relatório resumido da propriedade
+- **Porta-documentos Digital**: armazenamento seguro de documentos importantes
+- **Integração com Programas de Financiamento**: facilitação de acesso a crédito
+- **Apoio à Certificação**: suporte a processos de certificação orgânica e outras
+
+### 8.5 Usabilidade e Treinamento
+
+- **Design Centrado no Usuário**: melhorias contínuas na interface
+- **Sistema de Ajuda Integrado**: tutoriais passo a passo
+- **Material de Treinamento**: guias e vídeos explicativos
+- **Gamificação**: sistema de recompensas para engajamento contínuo
 
 ## 9. Exemplos de Uso
 
-### 9.1 Cálculo de Área para Campo Retangular
+### 9.1 Exemplo - Sistema de Cultura e Campo
 
-1. Acesse a calculadora de área
-2. Selecione o tipo "Retangular"
-3. Insira o comprimento (ex: 100m)
-4. Insira a largura (ex: 50m)
-5. Clique em "Calcular Área"
-6. Resultado: 5000 m² ou 0,5 hectares
+1. Cadastrar uma nova cultura (ex: Mandioca)
+2. Adicionar um campo com geometria retangular
+3. Visualizar os cálculos automáticos de área e insumos
+4. Usar as calculadoras para planejamento de plantio
 
-### 9.2 Cálculo de Insumos para Cultura de Mandioca
+### 9.2 Exemplo - Sistema de Sensores
 
-1. Acesse a calculadora de insumos
-2. Selecione a cultura "Mandioca"
-3. Insira a área (ex: 0,5 hectares)
-4. Clique em "Calcular Insumos"
-5. Resultado: Quantidades de N, P, K e total de fertilizantes
+1. Adicionar sensores a um campo existente
+2. Registrar leituras manuais ou usar o simulador
+3. Analisar dados e gerar recomendações
+4. Visualizar histórico de leituras em gráficos
 
-### 9.3 Cálculo de Irrigação
+### 9.3 Exemplo - Catálogo de Equipamentos
 
-1. Acesse a calculadora de irrigação
-2. Selecione a cultura
-3. Informe as dimensões do campo
-4. Informe o volume de água por metro
-5. Clique em "Calcular Irrigação"
-6. Resultado: Volume total de água necessário
+1. Explorar fabricantes de sensores
+2. Visualizar modelos disponíveis por tipo
+3. Comparar especificações técnicas
+4. Verificar compatibilidade com o sistema
 
 ## 10. Resolução de Problemas
 
 ### 10.1 Problemas Comuns
 
-1. **Erro ao salvar cultura/campo**:
-    - Verifique se todos os campos obrigatórios foram preenchidos
-    - Verifique a conexão com o MongoDB
-2. **Erro nos cálculos**:
-    - Certifique-se de que os valores inseridos são válidos
-    - Verifique se o tipo de geometria está correto
-3. **Erro na visualização**:
-    - Verifique se a biblioteca Plotly está carregada corretamente
-    - Verifique se os dados para visualização são válidos
+1. **Erro de conexão com bancos de dados**:
+    - Verifique se os serviços de banco de dados estão em execução
+    - Confirme se as credenciais estão corretas nas variáveis de ambiente
+2. **Erro ao instalar dependências**:
+    - Para o Oracle, você pode precisar do Oracle Instant Client
+    - Para o MySQL, pode ser necessário instalar bibliotecas de desenvolvimento
+3. **Erro no sistema de sensores**:
+    - Verifique se as tabelas foram criadas corretamente
+    - Para erros de formato de dados, o tipo Text pode ser necessário
 
 ### 10.2 Logs e Diagnóstico
 
@@ -436,12 +666,22 @@ Comandos disponíveis:
 - Use o console do navegador para verificar erros de JavaScript
 - Em caso de problemas com Docker, verifique os logs dos contêineres
 
-## 11. Integração com R (Análise Estatística)
+## 11. Conclusão
 
-Exportação de dados para análise em R, quando usado no modo TERMINAL (cli_app.py):
+O EasyAgro é uma plataforma completa para gestão agrícola digital, com foco especial em pequenos produtores rurais. Combinando gestão de culturas, campos, monitoramento por sensores e análise de dados, a aplicação oferece ferramentas poderosas em uma interface acessível.
 
-- Culturas: `culturas_export.csv`
-- Campos: `campos_export.csv`
-- Insumos: `insumos_export.csv`
+Com sua arquitetura multi-banco de dados, a plataforma demonstra como diferentes tecnologias podem ser combinadas para criar soluções robustas e escaláveis, mantendo a simplicidade necessária para seu público-alvo.
 
-Estes arquivos podem ser utilizados para análises estatísticas mais avançadas na linguagem R.
+O projeto está em constante evolução, com novas funcionalidades planejadas para tornar a plataforma ainda mais completa e útil no dia a dia do produtor rural.
+
+## 🗃 Histórico de lançamentos
+
+* 1.0.0 - 27/03/2025
+    * 
+* 1.1.0 - 22/04/2025
+    * 
+
+
+## 📋 Licença
+
+<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/agodoi/template">MODELO GIT FIAP</a> por <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://fiap.com.br">Fiap</a> está licenciado sobre <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution 4.0 International</a>.</p>
