@@ -19,12 +19,59 @@
 ### Coordenador(a)
 - <a href="https://www.linkedin.com/company/inova-fusca">Andre Godoy Chiovato</a>
 
-
 ## 📜 Descrição
 
 O EasyAgro é uma aplicação web desenvolvida para a gestão agrícola digital, com foco na gestão de culturas e campos, cálculos de área, insumos, irrigação e plantio, e sensoriamento. A aplicação serve como uma solução completa para pequenos produtores rurais, agricultores familiares e cooperativas, permitindo o **controle produtivo, gestão de dados e apoio à decisão**.
 
 Esta aplicação web leve implementada em Python integra controle de produção, rastreabilidade, análise de dados, monitoramento por sensores e apoio à gestão em uma plataforma única e amigável. Ela funciona como uma *porta de entrada digital* para o agricultor familiar, organizando suas informações e conectando-o a benefícios, sejam conhecimentos ou créditos.
+
+## 🚀 Novas Funcionalidades Implementadas
+
+### Sistema de Sensores Físicos (ESP32)
+- **Integração com ESP32**: Sistema completo de monitoramento com sensores simulados no Wokwi
+- **Sensores Implementados**:
+  - Sensor de Fósforo (P): Simulado por botão físico
+  - Sensor de Potássio (K): Simulado por botão físico  
+  - Sensor de pH: Simulação com valores dinâmicos baseados em função senoidal
+  - Sensor de umidade do solo: DHT22 para monitoramento em tempo real
+- **Controle de Irrigação**: Relé automático com LED indicador baseado em lógica inteligente
+- **Lógica de Controle**: Sistema ativa irrigação quando umidade < 30% E pH entre 6.0-7.5
+
+### Upload e Importação de Dados CSV
+- **Interface Web para Upload**: Formulário amigável para importação de dados do ESP32
+- **Processamento Inteligente**: 
+  - Detecção automática de separadores (`;` ou `,`)
+  - Criação automática de sensores se necessário
+  - Associação opcional com campos específicos
+- **Timestamps Simulados**: Conversão automática de timestamps do ESP32 para dados realistas com intervalos de 5 minutos
+- **Validação de Dados**: Verificação de formato e tratamento de erros
+- **Preview de Arquivos**: Visualização das primeiras linhas antes da importação
+
+### Dashboard de Sensores com Streamlit
+- **Dashboard Interativo**: Visualização avançada de dados dos sensores
+- **Gráficos Dinâmicos**: 
+  - Histórico de umidade do solo
+  - Evolução do pH ao longo do tempo
+  - Monitoramento de nutrientes (P e K)
+- **Estatísticas em Tempo Real**: Médias, mínimos, máximos e desvios padrão
+- **Filtros Avançados**: Seleção por sensor e período de análise
+- **Execução Integrada**: Inicialização automática do dashboard a partir da aplicação web
+
+### Integração com API Climática
+- **OpenWeather Integration**: Consulta de dados meteorológicos em tempo real
+- **Decisão Inteligente de Irrigação**: 
+  - Considera previsão de chuva
+  - Analisa temperatura e umidade do ar
+  - Combina dados climáticos com leituras dos sensores
+- **Recomendações Automáticas**: Sistema sugere quando irrigar com base no clima e solo
+- **Interface Climática**: Botão na página de detalhes do campo para verificar condições
+
+### Sistema de Relatórios Avançados
+- **Relatórios por Sensor**: Análise detalhada de leituras individuais
+- **Relatórios por Campo**: Visão consolidada de todos os sensores de um campo
+- **Visualizações Gráficas**: Gráficos de linha, barras e indicadores
+- **Exportação de Dados**: Dados formatados para análise externa
+- **Estatísticas Históricas**: Geração automática de históricos por período
 
 ## 2. Arquitetura da Aplicação
 
@@ -43,7 +90,6 @@ Esta abordagem híbrida permite aproveitar as vantagens de cada tecnologia:
 ### 2.1 Estrutura de Diretórios
 
 ```
-
 FIAP-CAP1_FARMTECH_PY/
 │
 ├── app/
@@ -69,7 +115,13 @@ FIAP-CAP1_FARMTECH_PY/
 │   │   ├── db_service.py       # Interação com MongoDB
 │   │   ├── sql_db_service.py   # Interação com MySQL
 │   │   ├── oracle_db_service.py # Interação com Oracle
+│   │   ├── weather_service.py  # 🆕 Integração com API climática
 │   │   └── init_db.py          # Inicialização de dados
+│   │
+│   ├── scripts/               # 🆕 Scripts utilitários
+│   │   ├── dashboard.py       # Dashboard Streamlit
+│   │   ├── importar_dados_esp32.py # Script de importação CSV
+│   │   └── limpar_dados_sensor.py  # Limpeza de dados
 │   │
 │   ├── static/
 │   │   ├── css/style.css       # Estilos personalizados
@@ -79,7 +131,7 @@ FIAP-CAP1_FARMTECH_PY/
 │   └── templates/
 │       ├── base.html           # Template base
 │       ├── calculadora.html    # Calculadora Agrícola
-│       ├── campo_detalhes.html # Detalhes do campo
+│       ├── campo_detalhes.html # Detalhes do campo (🆕 seção climática)
 │       ├── campo_form.html     # Formulário de campo
 │       ├── campos.html         # Lista de campos
 │       ├── cultura_detalhes.html # Detalhes da cultura
@@ -91,12 +143,18 @@ FIAP-CAP1_FARMTECH_PY/
 │       │   ├── detalhe_sensor.html # Detalhes do sensor
 │       │   ├── sensor_form.html    # Formulário de sensor
 │       │   ├── sensores_campo.html # Sensores por campo
+│       │   ├── upload_csv.html     # 🆕 Upload de dados CSV
 │       │   └── relatorios.html     # Relatórios de sensores
 │       ├── catalogo/           # Templates para catálogo
 │       │   ├── index.html      # Catálogo de sensores
 │       │   ├── detalhe_fabricante.html # Detalhes do fabricante
 │       │   └── detalhe_modelo.html     # Detalhes do modelo
 │       └── modo_simplificado.html # Modo Simplificado - Interface terminal
+│
+├── wokwi/                     # 🆕 Projeto ESP32
+│   ├── sketch.ino            # Código do ESP32
+│   ├── diagram.json          # Circuito Wokwi
+│   └── README.md             # Documentação do circuito
 │
 ├── cli/
 │   └── cli_app.py              # Interface de linha de comando
@@ -106,7 +164,6 @@ FIAP-CAP1_FARMTECH_PY/
 ├── Dockerfile                  # Configuração para Docker
 ├── docker-compose.yml          # Configuração para Docker Compose
 └── run.py                      # Ponto de entrada da aplicação
-
 ```
 
 ### 2.2 Componentes Principais
@@ -116,15 +173,24 @@ FIAP-CAP1_FARMTECH_PY/
     - Gerencia a lógica de negócios e cálculos
     - Interação com múltiplos bancos de dados
     - Processamento de dados de sensores
+    - 🆕 Integração com ESP32 e dados climáticos
 2. **Frontend (HTML/CSS/JavaScript)**
     - Interface web para interação com o usuário
     - Visualizações gráficas com Plotly
     - Dashboards para monitoramento de sensores
+    - 🆕 Interface para upload de dados CSV
 3. **Banco de Dados**
     - **MongoDB**: Culturas e campos
     - **MySQL**: Sensores e leituras
     - **Oracle**: Catálogo de fabricantes e modelos
-4. **CLI (Interface de Linha de Comando)**
+4. **ESP32 Integration**
+    - 🆕 Simulação no Wokwi com sensores reais
+    - 🆕 Coleta automática de dados de sensores
+    - 🆕 Controle automático de irrigação
+5. **External Services**
+    - 🆕 OpenWeather API para dados climáticos
+    - 🆕 Streamlit Dashboard para visualizações avançadas
+6. **CLI (Interface de Linha de Comando)**
     - Fornece acesso às funcionalidades via terminal
     - Alternativa à interface web para operações rápidas
 
@@ -132,11 +198,9 @@ FIAP-CAP1_FARMTECH_PY/
 
 ### 3.1 Modelos MongoDB (NoSQL)
 
-### 3.1.1 Cultura
+#### 3.1.1 Cultura
 
 ```json
-
-json
 {
   "_id": "unique_id_cultura",
   "nome_cultura": "Mandioca",
@@ -187,14 +251,11 @@ json
     "frequencia_adubacao": "Plantio e cobertura aos 3-4 meses"
   }
 }
-
 ```
 
-### 3.1.2 Campo
+#### 3.1.2 Campo
 
 ```json
-
-json
 {
   "_id": "unique_id_campo",
   "nome_produtor": "Nome do Produtor",
@@ -223,21 +284,18 @@ json
     }
   }
 }
-
 ```
 
 ### 3.2 Modelos MySQL (Relacional - Sensores)
 
-### 3.2.1 Sensor
+#### 3.2.1 Sensor
 
 ```python
-
-python
 class Sensor(Base):
     __tablename__ = 'sensor'
 
     id = Column(Integer, primary_key=True)
-    tipo = Column(String(50), nullable=False)# S1, S2, S3
+    tipo = Column(String(50), nullable=False)  # S1, S2, S3
     modelo = Column(String(100))
     data_instalacao = Column(Date)
     ativo = Column(Boolean, default=True)
@@ -247,48 +305,41 @@ class Sensor(Base):
     leituras = relationship("LeituraSensor", back_populates="sensor")
     alertas = relationship("AlertaSensor", back_populates="sensor")
     historicos = relationship("HistoricoSensor", back_populates="sensor")
-
 ```
 
-### 3.2.2 PosicaoSensor
+#### 3.2.2 PosicaoSensor
 
 ```python
-
-python
 class PosicaoSensor(Base):
     __tablename__ = 'posicao_sensor'
 
     id = Column(Integer, primary_key=True)
     sensor_id = Column(Integer, ForeignKey('sensor.id'))
-    campo_id = Column(String(50), nullable=False)# ID do MongoDB
+    campo_id = Column(String(50), nullable=False)  # ID do MongoDB
     latitude = Column(Float)
     longitude = Column(Float)
     profundidade = Column(Float)
 
     sensor = relationship("Sensor", back_populates="posicao")
-
 ```
 
-### 3.2.3 LeituraSensor
+#### 3.2.3 LeituraSensor
 
 ```python
-
-python
 class LeituraSensor(Base):
     __tablename__ = 'leitura_sensor'
 
     id = Column(Integer, primary_key=True)
     sensor_id = Column(Integer, ForeignKey('sensor.id'))
     data_hora = Column(DateTime, nullable=False, default=datetime.utcnow)
-    valor = Column(Text, nullable=False)# Armazena valores numéricos ou JSON
+    valor = Column(Text, nullable=False)  # Armazena valores numéricos ou JSON
     unidade = Column(String(20), nullable=False)
     valido = Column(Boolean, default=True)
 
     sensor = relationship("Sensor", back_populates="leituras")
-
 ```
 
-### 3.2.4 Outras Entidades MySQL
+#### 3.2.4 Outras Entidades MySQL
 
 - **AplicacaoRecurso**: Registro de aplicações de recursos (água, fertilizantes)
 - **RecomendacaoAutomatica**: Recomendações geradas pelo sistema
@@ -297,11 +348,9 @@ class LeituraSensor(Base):
 
 ### 3.3 Modelos Oracle (Relacional - Catálogo)
 
-### 3.3.1 FabricanteSensor
+#### 3.3.1 FabricanteSensor
 
 ```python
-
-python
 class FabricanteSensor(OracleBase):
     __tablename__ = 'fabricante_sensor'
 
@@ -311,30 +360,26 @@ class FabricanteSensor(OracleBase):
     website = Column(String(255))
     descricao = Column(String(500))
 
-# Relacionamento M:N com ModeloSensor
+    # Relacionamento M:N com ModeloSensor
     modelos = relationship("ModeloSensor", secondary=fabricante_modelo, back_populates="fabricantes")
-
 ```
 
-### 3.3.2 ModeloSensor
+#### 3.3.2 ModeloSensor
 
 ```python
-
-python
 class ModeloSensor(OracleBase):
     __tablename__ = 'modelo_sensor'
 
     id = Column(Integer, primary_key=True)
     nome = Column(String(100), nullable=False)
-    tipo = Column(String(50), nullable=False)# S1, S2, S3
+    tipo = Column(String(50), nullable=False)  # S1, S2, S3
     precisao = Column(String(50))
     faixa_medicao = Column(String(100))
     preco_referencia = Column(String(50))
     descricao = Column(String(500))
 
-# Relacionamento M:N com FabricanteSensor
+    # Relacionamento M:N com FabricanteSensor
     fabricantes = relationship("FabricanteSensor", secondary=fabricante_modelo, back_populates="modelos")
-
 ```
 
 ## 4. Funcionalidades Principais
@@ -354,10 +399,11 @@ class ModeloSensor(OracleBase):
 - **Adicionar Campo**: Cadastro de novos campos com geometrias variadas
 - **Editar Campo**: Modificação de dados de campos existentes
 - **Remover Campo**: Exclusão de campos do sistema
+- 🆕 **Informações Climáticas**: Consulta de dados meteorológicos e recomendações de irrigação
 
 ### 4.3 Calculadoras
 
-### 4.3.1 Calculadora de Área
+#### 4.3.1 Calculadora de Área
 
 Suporta cálculos para diferentes geometrias:
 
@@ -366,20 +412,20 @@ Suporta cálculos para diferentes geometrias:
 - **Circular**: π × Raio²
 - **Trapezoidal**: ((Base Maior + Base Menor) × Altura) / 2
 
-### 4.3.2 Calculadora de Insumos
+#### 4.3.2 Calculadora de Insumos
 
 - Cálculo de fertilizantes NPK com base na cultura e área
 - Estimativa de custos de fertilizantes (*valor padrão R$ 5,00/Kg*)
 - Visualização da distribuição de nutrientes (N, P, K)
 
-### 4.3.3 Calculadora de Irrigação
+#### 4.3.3 Calculadora de Irrigação
 
 - Cálculo do número de linhas/ruas com base no espaçamento da cultura
 - Determinação do volume de água necessário por linha
 - Cálculo do volume total de irrigação
 - Visualização do layout de irrigação
 
-### 4.3.4 Calculadora de Plantio
+#### 4.3.4 Calculadora de Plantio
 
 - Cálculo da quantidade de plantas com base na densidade e área
 - Determinação da quantidade de sementes necessárias considerando taxa de germinação
@@ -398,6 +444,10 @@ Suporta cálculos para diferentes geometrias:
 - **Recomendações automáticas** com base nas leituras
 - **Alertas** para condições anormais
 - **Visualização** de leituras em gráficos
+- 🆕 **Integração ESP32**: Coleta automática de dados de sensores físicos simulados
+- 🆕 **Upload CSV**: Interface para importação de dados coletados
+- 🆕 **Dashboard Avançado**: Visualizações interativas com Streamlit
+- 🆕 **Controle de Irrigação**: Sistema automático baseado em lógica inteligente
 
 ### 4.5 Catálogo de Equipamentos
 
@@ -414,8 +464,29 @@ Suporta cálculos para diferentes geometrias:
 - Padrões de espaçamento para plantio
 - Gráficos de leituras de sensores
 - Dashboards de monitoramento
+- 🆕 **Dashboard Interativo**: Análise avançada com Streamlit
+- 🆕 **Gráficos Temporais**: Evolução histórica dos dados dos sensores
+- 🆕 **Indicadores Climáticos**: Visualização de dados meteorológicos
 
-### 4.7 Modo Terminal
+### 4.7 Sistema Físico de Sensores (ESP32)
+
+- 🆕 **Circuito Simulado**: Projeto completo no Wokwi com componentes reais
+- 🆕 **Sensores Físicos**:
+  - Botões para simular presença de fósforo e potássio
+  - DHT22 para monitoramento de umidade
+  - Simulação dinâmica de pH com função senoidal
+- 🆕 **Controle Automático**: Relé e LED para sistema de irrigação
+- 🆕 **Coleta de Dados**: Export automático em formato CSV
+- 🆕 **Lógica Inteligente**: Decisões baseadas em múltiplos parâmetros
+
+### 4.8 Integração Climática
+
+- 🆕 **API OpenWeather**: Dados meteorológicos em tempo real
+- 🆕 **Decisão Inteligente**: Combina dados climáticos e sensores para irrigação
+- 🆕 **Previsão de Chuva**: Evita irrigação desnecessária
+- 🆕 **Interface Integrada**: Botão para consulta climática nas páginas de campo
+
+### 4.9 Modo Terminal
 
 - Interface de linha de comando para acesso às funcionalidades
 - Comandos para listar, visualizar e calcular dados
@@ -454,6 +525,14 @@ Suporta cálculos para diferentes geometrias:
 - `POST /sensores/api/aplicar-recomendacao/<id>`: Registra aplicação de uma recomendação
 - `POST /sensores/api/registrar-leitura`: Registra uma nova leitura de sensor
 - `POST /sensores/api/simular-leituras`: Simula leituras para testes (apenas em modo DEBUG)
+- 🆕 `POST /sensores/processar-upload-csv`: Processa upload de arquivo CSV do ESP32
+- 🆕 `GET /sensores/upload-csv`: Interface para upload de dados CSV
+- 🆕 `POST /sensores/api/receber-dados-esp32`: Recebe dados diretamente do ESP32
+
+### 5.5 API Climática
+
+- 🆕 `GET /sensores/api/verificar-irrigacao-clima/<campo_id>`: Verifica necessidade de irrigação com dados climáticos
+- 🆕 `POST /sensores/api/ativar-irrigacao/<campo_id>`: Ativa sistema de irrigação
 
 ## 6. Tecnologias Utilizadas
 
@@ -465,6 +544,7 @@ Suporta cálculos para diferentes geometrias:
 - **PyMongo**: Interface para MongoDB
 - **cx_Oracle**: Interface para Oracle Database
 - **NumPy/Pandas**: Processamento numérico para cálculos
+- 🆕 **Requests**: Para integração com APIs externas (OpenWeather)
 
 ### 6.2 Frontend
 
@@ -472,14 +552,27 @@ Suporta cálculos para diferentes geometrias:
 - **Bootstrap**: Framework CSS para interface responsiva
 - **Plotly**: Biblioteca para visualizações interativas
 - **Fetch API**: Para comunicação com o backend
+- 🆕 **Streamlit**: Dashboard interativo para análise avançada
 
-### 6.3 Armazenamento de Dados
+### 6.3 Hardware/IoT
+
+- 🆕 **ESP32**: Microcontrolador para coleta de dados
+- 🆕 **Wokwi**: Plataforma de simulação de circuitos
+- 🆕 **Sensores Simulados**: DHT22, botões, LDR
+- 🆕 **Atuadores**: Relé e LED para controle de irrigação
+
+### 6.4 Armazenamento de Dados
 
 - **MongoDB**: Banco de dados NoSQL para armazenamento flexível de documentos
 - **MySQL**: Banco de dados relacional para sensores e leituras
 - **Oracle Database**: Banco de dados relacional para catálogo de equipamentos
 
-### 6.4 Implantação
+### 6.5 Serviços Externos
+
+- 🆕 **OpenWeather API**: Dados meteorológicos em tempo real
+- 🆕 **Streamlit Cloud**: Dashboard em nuvem (opcional)
+
+### 6.6 Implantação
 
 - **Docker**: Contêinerização da aplicação
 - **Docker Compose**: Orquestração de múltiplos contêineres
@@ -491,38 +584,55 @@ Suporta cálculos para diferentes geometrias:
 - Docker e Docker Compose
 - Acesso à internet para download de dependências
 - Pelo menos 4GB de RAM para execução do Oracle Database
+- 🆕 **Chave API OpenWeather** (gratuita em https://openweathermap.org/api)
+- 🆕 **Streamlit** (para dashboard avançado)
 
-### 7.2 Passos para Implantação com Docker
+### 7.2 Variáveis de Ambiente
+
+```bash
+# Configurações básicas
+FLASK_APP=run.py
+FLASK_ENV=development
+SECRET_KEY=sua_chave_secreta
+
+# Bancos de dados
+MONGO_URI=mongodb://localhost:27017/farmtech
+SQL_DATABASE_URI=mysql://farmtech:senha@localhost/farmtech_sensors
+ORACLE_DATABASE_URI=oracle+cx_oracle://system:senha@localhost:1521/XE
+
+# 🆕 API Externa
+OPENWEATHER_API_KEY=sua_chave_openweather_aqui
+```
+
+### 7.3 Passos para Implantação com Docker
 
 1. Clone o repositório:
     
     ```bash
-    
-    bash
     git clone https://github.com/thiagoparaizo/FIAP_CAP1_FarmTech_py.git
     cd FIAP_CAP1_FarmTech_py
-    
     ```
     
-2. Execute com Docker Compose:
+2. Configure as variáveis de ambiente:
     
     ```bash
+    cp .env.example .env
+    # Edite o arquivo .env com suas configurações
+    ```
     
-    bash
+3. Execute com Docker Compose:
+    
+    ```bash
     docker-compose up -d
-    
     ```
     
-3. Acesse a aplicação:
+4. Acesse a aplicação:
     
     ```
-    
     http://localhost:5000
-    
     ```
-    
 
-### 7.3 Implantação Manual
+### 7.4 Implantação Manual
 
 1. Configure os bancos de dados:
     
