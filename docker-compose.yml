@@ -11,6 +11,7 @@ services:
       - MONGO_URI=mongodb://mongo:27017/farmtech
       - SQL_DATABASE_URI=mysql://farmtech:senha@mysql/farmtech_sensors
       - ORACLE_DATABASE_URI=oracle+cx_oracle://system:senha@oracle:1521/XE
+      - OPENWEATHER_API_KEY=sua_chave_aqui
     depends_on:
       - mongo
       - mysql

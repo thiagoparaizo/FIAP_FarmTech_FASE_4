@@ -25,6 +25,10 @@ O EasyAgro é uma aplicação web desenvolvida para a gestão agrícola digital,
 
 Esta aplicação web leve implementada em Python integra controle de produção, rastreabilidade, análise de dados, monitoramento por sensores e apoio à gestão em uma plataforma única e amigável. Ela funciona como uma *porta de entrada digital* para o agricultor familiar, organizando suas informações e conectando-o a benefícios, sejam conhecimentos ou créditos.
 
+## Documentação e Sreenshots do Sistema
+[ Veja a Documentação e Sreenshots do Sistema em funcionamento ](doc/documentacao.md)
+
+
 ## 🚀 Novas Funcionalidades Implementadas
 
 ### Sistema de Sensores Físicos (ESP32)

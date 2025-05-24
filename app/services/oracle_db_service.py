@@ -8,7 +8,10 @@ class OracleDatabaseService:
         self.engine = create_engine(database_uri)
         
         # Criar tabelas
-        #OracleBase.metadata.create_all(self.engine)
+        try:
+            OracleBase.metadata.drop_all(self.engine)
+        except Exception as e:
+            print(f"Erro ao excluir tabelas: {e}")
         
         self.session_factory = sessionmaker(bind=self.engine)
         self.Session = scoped_session(self.session_factory)
