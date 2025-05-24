@@ -28,6 +28,9 @@ Esta aplicação web leve implementada em Python integra controle de produção,
 ## Documentação e Sreenshots do Sistema
 [ Veja a Documentação e Sreenshots do Sistema em funcionamento ](doc/documentacao.md)
 
+## Análise e Modelo de Dados usados no Sistema
+![Veja a Análise e Modelo de Dados usados no Sistema](doc/farmtech_modelagem_dados.md)
+
 
 ## 🚀 Novas Funcionalidades Implementadas
 
