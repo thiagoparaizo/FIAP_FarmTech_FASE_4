@@ -372,43 +372,9 @@ class DatabaseService:
             )
 ```
 
-### Padrões de Consistência
-
-**1. Eventual Consistency**
-- Dados de catálogo (Oracle) → Cache local
-- Sincronização assíncrona quando necessário
-
-**2. Strong Consistency**
-- Leituras de sensores → MySQL com ACID
-- Aplicações de insumos → Transações garantidas
-
-**3. BASE (MongoDB)**
-- Disponibilidade priorizada para dados de domínio
-- Consistência eventual acceptable para culturas/campos
-
----
-
 ## 🎨 Padrões de Design Utilizados
 
-### 1. **Repository Pattern**
-```python
-class CulturaRepository:
-    def __init__(self, mongo_db):
-        self.db = mongo_db
-    
-    def obter_por_nome(self, nome):
-        return self.db.culturas.find_one({"nome_cultura": nome})
-
-class SensorRepository:
-    def __init__(self, mysql_db):
-        self.db = mysql_db
-    
-    def obter_leituras_periodo(self, sensor_id, inicio, fim):
-        # SQL otimizado para time series
-        pass
-```
-
-### 2. **Service Layer**
+### 1. **Service Layer**
 ```python
 class AnaliseService:
     def __init__(self, cultura_repo, sensor_repo, catalogo_repo):
@@ -420,16 +386,11 @@ class AnaliseService:
         # Combina dados dos 3 bancos
         pass
 ```
-
-### 3. **CQRS (Command Query Responsibility Segregation)**
-- **Commands**: Operações de escrita especializadas por banco
-- **Queries**: Leituras otimizadas com materialização quando necessário
-
 ---
 
 ## 📈 Métricas de Performance
 
-### Comparativo de Performance por Operação
+### Comparativo de Performance por Operação (Dados Ilustrativos)
 
 | Operação | MongoDB | MySQL | Oracle | Banco Escolhido | Motivo |
 |----------|---------|-------|--------|-----------------|--------|
@@ -438,7 +399,7 @@ class AnaliseService:
 | Análise complexa | 500ms | 400ms | **100ms** | Oracle | Otimizador avançado |
 | Busca por localização | **80ms** | 250ms | 180ms | MongoDB | Queries geoespaciais |
 
-### Escalabilidade
+### Escalabilidade (Dados Ilustrativos)
 
 ```
 Cenário: 1M registros de leituras/dia
