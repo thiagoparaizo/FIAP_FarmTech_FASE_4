@@ -177,6 +177,7 @@
     </div>
 </div>
 
+
 {% if cultura %}
 <div class="row">
     <div class="col-md-12">
@@ -217,6 +218,25 @@
     </div>
 </div>
 {% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-cloud-sun"></i> Informações Climáticas e Irrigação</h5>
+            </div>
+            <div class="card-body">
+                <div id="clima-container">
+                    <div class="text-center">
+                        <button class="btn btn-primary" id="btn-verificar-clima">
+                            <i class="bi bi-cloud-download"></i> Verificar Condições Climáticas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal para confirmação de remoção -->
 <div class="modal fade" id="modalRemoverCampo" tabindex="-1" aria-hidden="true">
@@ -488,6 +508,107 @@
         infoCard.querySelector('.card-body').appendChild(estadoAtual);
         {% endif %}
     });
+
+    document.getElementById('btn-verificar-clima').addEventListener('click', function() {
+        // Mostrar indicador de carregamento
+        document.getElementById('clima-container').innerHTML = `
+            <div class="text-center py-4">
+                <div class="spinner-border text-info" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+                <p class="mt-2">Consultando dados climáticos...</p>
+            </div>    
+        `;  
+            // Buscar dados climáticos do servidor
+        fetch(`/sensores/api/verificar-irrigacao-clima/{{ campo._id }}?cidade={{ campo.localizacao.municipio }}`)
+            .then(response => response.json())
+            .then(data => {
+                // Criar HTML com os dados climáticos e recomendação
+                let html = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">Dados Climáticos para {{ campo.localizacao.municipio }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-6 text-center">
+                                            <h3>${data.clima_atual.temperatura}°C</h3>
+                                            <p>Temperatura</p>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <h3>${data.clima_atual.umidade_ar}%</h3>
+                                            <p>Umidade do Ar</p>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-info mt-3">
+                                        <p class="mb-0"><strong>Condição:</strong> ${data.clima_atual.descricao}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header ${data.irrigar ? 'bg-success' : 'bg-warning'} text-white">
+                                    <h6 class="mb-0">Recomendação de Irrigação</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <i class="bi ${data.irrigar ? 'bi-droplet-fill text-primary' : 'bi-droplet-half text-warning'} display-1"></i>
+                                    </div>
+                                    <div class="alert ${data.irrigar ? 'alert-success' : 'alert-warning'}">
+                                        <p class="mb-0"><strong>${data.irrigar ? 'Recomendado Irrigar' : 'Irrigação Não Necessária'}</strong></p>
+                                        <p class="mb-0"><small>${data.motivo}</small></p>
+                                    </div>
+                                    <div class="d-grid mt-3">
+                                        <button class="btn ${data.irrigar ? 'btn-success' : 'btn-outline-secondary'}" 
+                                                ${data.irrigar ? '' : 'disabled'}
+                                                onclick="ativarIrrigacao('{{ campo._id }}')">
+                                            <i class="bi bi-droplet"></i> Ativar Irrigação
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('clima-container').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                document.getElementById('clima-container').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i> Ocorreu um erro ao consultar os dados climáticos. Por favor, tente novamente mais tarde.
+                    </div>
+                `;
+            });
+    });
+
+    function ativarIrrigacao(campoId) {
+        if (confirm("Deseja ativar a irrigação para este campo?")) {
+            // Chamar API para ativar irrigação
+            fetch(`/sensores/api/ativar-irrigacao/${campoId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.erro) {
+                    alert(`Erro: ${data.erro}`);
+                } else {
+                    alert(`Irrigação ativada com sucesso! ${data.mensagem}`);
+                    // Recarregar a página para atualizar os dados
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao ativar a irrigação.');
+            });
+        }
+    }
+            
     
     // Função para calcular dias desde uma data
     function calcularDiasDesdeData(dataString) {

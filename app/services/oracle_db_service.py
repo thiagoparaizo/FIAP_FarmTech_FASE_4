@@ -8,7 +8,7 @@ class OracleDatabaseService:
         self.engine = create_engine(database_uri)
         
         # Criar tabelas
-        OracleBase.metadata.create_all(self.engine)
+        #OracleBase.metadata.create_all(self.engine)
         
         self.session_factory = sessionmaker(bind=self.engine)
         self.Session = scoped_session(self.session_factory)

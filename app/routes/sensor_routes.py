@@ -1,4 +1,5 @@
 # app/routes/sensor_routes.py
+import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify
 from app.services.sql_db_service import SQLDatabaseService
 from app.services.db_service import DatabaseService
@@ -666,3 +667,416 @@ def listar_sensores_api():
         return jsonify({"erro": str(e)}), 500
     finally:
         session.close()
+        
+
+@sensor_bp.route('/api/receber-dados-esp32', methods=['POST'])
+def receber_dados_esp32():
+    """Recebe dados do ESP32 via API"""
+    try:
+        # Verificar se os dados estão em formato CSV ou JSON
+        if request.content_type == 'application/json':
+            dados = request.json
+            timestamp = dados.get('timestamp')
+            fosforo = dados.get('fosforo') == 1 or dados.get('fosforo') == '1'
+            potassio = dados.get('potassio') == 1 or dados.get('potassio') == '1'
+            ph = float(dados.get('ph', 0))
+            umidade = float(dados.get('umidade', 0))
+            irrigacao = dados.get('irrigacao') == 1 or dados.get('irrigacao') == '1'
+        else:
+            # Formato CSV: timestamp,fosforo,potassio,ph,umidade,irrigacao
+            csv_data = request.data.decode('utf-8').strip()
+            partes = csv_data.split(',')
+            if len(partes) != 6:
+                return jsonify({"erro": "Formato CSV inválido"}), 400
+                
+            timestamp = int(partes[0])
+            fosforo = partes[1] == '1'
+            potassio = partes[2] == '1'
+            ph = float(partes[3])
+            umidade = float(partes[4])
+            irrigacao = partes[5] == '1'
+
+        # Obter ID do sensor associado (pode ser parametrizado)
+        sensor_id = request.args.get('sensor_id')
+        if not sensor_id:
+            return jsonify({"erro": "ID do sensor não especificado"}), 400
+            
+        # Registrar leituras no banco
+        sql_db = get_sql_db()
+
+        # Registrar leitura de umidade
+        sql_db.adicionar_leitura(sensor_id, umidade, '%')
+        
+        # Registrar leitura de pH
+        sql_db.adicionar_leitura(sensor_id, ph, 'pH')
+        
+        # Registrar leituras de nutrientes
+        dados_nutrientes = {
+            'P': 1 if fosforo else 0,
+            'K': 1 if potassio else 0
+        }
+        sql_db.adicionar_leitura(sensor_id, str(dados_nutrientes), 'ppm')
+        
+        # Registrar estado de irrigação
+        # Isso poderia atualizar um campo na tabela Sensor ou ser salvo em uma tabela específica
+        
+        return jsonify({
+            "mensagem": "Dados recebidos com sucesso",
+            "timestamp": timestamp
+        }), 201
+        
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+    
+
+# Adicionar às rotas existentes
+@sensor_bp.route('/api/verificar-irrigacao-clima/<campo_id>', methods=['GET'])
+def verificar_irrigacao_clima(campo_id):
+    """Verifica a necessidade de irrigação com base no clima"""
+    from app.services.weather_service import WeatherService
+    
+    # Obter cidade
+    cidade = request.args.get('cidade', 'Fortaleza')
+    
+    # Criar instância do serviço de clima
+    weather_service = WeatherService(current_app.config['OPENWEATHER_API_KEY'])
+    
+    # Obter serviços de banco de dados
+    sql_db = get_sql_db()
+    mongo_db = get_mongo_db()
+    
+    # Verificar necessidade de irrigação
+    resultado = weather_service.verificar_necessidade_irrigacao(
+        campo_id,
+        cidade,
+        sql_db,
+        mongo_db
+    )
+    
+    return jsonify(resultado)
+
+
+@sensor_bp.route('/api/ativar-irrigacao/<campo_id>', methods=['POST'])
+def ativar_irrigacao(campo_id):
+    """Ativa a irrigação para um campo específico"""
+    try:
+        # Obter serviços
+        sql_db = get_sql_db()
+        mongo_db = get_mongo_db()
+        
+        # Verificar se o campo existe
+        campo = mongo_db.obter_campo_por_id(campo_id)
+        if not campo:
+            return jsonify({"erro": "Campo não encontrado"}), 404
+        
+        # Registrar aplicação de recurso (água)
+        # Calcular quantidade baseada na área
+        area_hectare = campo.get('campo', {}).get('area_total_hectare', 0)
+        volume_agua = area_hectare * 10000  # 10.000 litros por hectare (exemplo)
+        
+        # Registrar aplicação
+        aplicacao_id = sql_db.adicionar_aplicacao_recurso(
+            campo_id=campo_id,
+            tipo_recurso="água",
+            quantidade=volume_agua,
+            unidade="L",
+            metodo_aplicacao="Sistema de Irrigação"
+        )
+        
+        return jsonify({
+            "mensagem": f"Irrigação ativada com {volume_agua:.0f} litros de água",
+            "aplicacao_id": aplicacao_id
+        })
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+    
+import csv
+import tempfile
+from werkzeug.utils import secure_filename
+from flask import request, flash, redirect
+
+# Adicionar estas rotas ao arquivo sensor_routes.py
+
+@sensor_bp.route('/upload-csv')
+def upload_csv_form():
+    """Página para upload de arquivo CSV"""
+    # Obter lista de sensores para associar os dados
+    sql_db = get_sql_db()
+    session = sql_db.get_session()
+    try:
+        from app.models.sensor_models import Sensor
+        sensores = session.query(Sensor).filter_by(ativo=True).all()
+    finally:
+        session.close()
+    
+    # Obter lista de campos para associar sensores
+    mongo_db = get_mongo_db()
+    campos = mongo_db.obter_todos_campos()
+    
+    return render_template('sensores/upload_csv.html', sensores=sensores, campos=campos)
+
+@sensor_bp.route('/processar-upload-csv', methods=['POST'])
+def processar_upload_csv():
+    """Processa o upload do arquivo CSV e importa os dados"""
+    temp_file_path = None
+    try:
+        # Verificar se foi enviado um arquivo
+        if 'arquivo_csv' not in request.files:
+            flash('Nenhum arquivo foi selecionado', 'danger')
+            return redirect(url_for('sensores.upload_csv_form'))
+        
+        arquivo = request.files['arquivo_csv']
+        if arquivo.filename == '':
+            flash('Nenhum arquivo foi selecionado', 'danger')
+            return redirect(url_for('sensores.upload_csv_form'))
+        
+        # Verificar se é um arquivo CSV
+        if not arquivo.filename.lower().endswith('.csv'):
+            flash('Por favor, selecione um arquivo CSV válido', 'danger')
+            return redirect(url_for('sensores.upload_csv_form'))
+        
+        # Obter parâmetros do formulário
+        sensor_id = request.form.get('sensor_id')
+        campo_id = request.form.get('campo_id')
+        separador = request.form.get('separador', ';')
+        criar_sensor_automatico = request.form.get('criar_sensor_automatico') == 'on'
+        
+        if not sensor_id and not criar_sensor_automatico:
+            flash('Selecione um sensor existente ou marque a opção para criar automaticamente', 'danger')
+            return redirect(url_for('sensores.upload_csv_form'))
+        
+        # Salvar arquivo temporariamente com correção
+        filename = secure_filename(arquivo.filename)
+        
+        # Criar arquivo temporário sem deletar automaticamente
+        import tempfile
+        temp_fd, temp_file_path = tempfile.mkstemp(suffix='.csv', text=True)
+        
+        # Fechar o file descriptor antes de usar o arquivo
+        os.close(temp_fd)
+        
+        # Salvar o conteúdo do arquivo
+        arquivo.save(temp_file_path)
+        
+        # Processar o arquivo CSV
+        sql_db = get_sql_db()
+        mongo_db = get_mongo_db()
+        
+        resultado = processar_arquivo_csv(
+            temp_file_path, 
+            sensor_id, 
+            campo_id,
+            separador,
+            criar_sensor_automatico,
+            sql_db, 
+            mongo_db
+        )
+        
+        if resultado['sucesso']:
+            periodo_info = resultado.get('periodo_simulado', {})
+            mensagem_principal = f'Arquivo processado com sucesso! {resultado["registros_importados"]} registros importados.'
+            
+            if periodo_info:
+                mensagem_periodo = f' Período simulado: {periodo_info["inicio"]} até {periodo_info["fim"]} (intervalos de {periodo_info["intervalo"]}).'
+                flash(mensagem_principal + mensagem_periodo, 'success')
+            else:
+                flash(mensagem_principal, 'success')
+            
+            if resultado.get('registros_erro', 0) > 0:
+                flash(f'Atenção: {resultado["registros_erro"]} registros tiveram erro e foram ignorados.', 'warning')
+            if resultado.get('sensor_criado'):
+                flash(f'Sensor criado automaticamente com ID: {resultado["sensor_id"]}', 'info')
+        else:
+            flash(f'Erro ao processar arquivo: {resultado["erro"]}', 'danger')
+        
+        return redirect(url_for('sensores.upload_csv_form'))
+        
+    except Exception as e:
+        flash(f'Erro inesperado: {str(e)}', 'danger')
+        return redirect(url_for('sensores.upload_csv_form'))
+    finally:
+        # Remover arquivo temporário de forma segura
+        if temp_file_path and os.path.exists(temp_file_path):
+            try:
+                os.unlink(temp_file_path)
+            except Exception as e:
+                print(f"Aviso: Não foi possível remover arquivo temporário: {e}")
+
+def processar_arquivo_csv(caminho_arquivo, sensor_id, campo_id, separador, criar_sensor_automatico, sql_db, mongo_db):
+    """Função para processar o arquivo CSV e importar os dados"""
+    try:
+        # Ler o arquivo CSV
+        dados = []
+        with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo:
+            # Detectar se tem cabeçalho
+            primeira_linha = arquivo.readline().strip()
+            arquivo.seek(0)
+            
+            # Se a primeira linha contém "timestamp" é um cabeçalho
+            tem_cabecalho = 'timestamp' in primeira_linha.lower()
+            
+            if separador == 'auto':
+                # Detectar separador automaticamente
+                if ';' in primeira_linha:
+                    separador = ';'
+                elif ',' in primeira_linha:
+                    separador = ','
+                else:
+                    separador = ';'  # padrão
+            
+            leitor = csv.reader(arquivo, delimiter=separador)
+            
+            if tem_cabecalho:
+                next(leitor)  # Pular cabeçalho
+            
+            for linha in leitor:
+                if len(linha) >= 6:  # Garantir que tem todas as colunas
+                    dados.append(linha)
+        
+        if not dados:
+            return {'sucesso': False, 'erro': 'Arquivo CSV vazio ou formato inválido'}
+        
+        # Verificar/criar sensor
+        sensor_criado = False
+        if not sensor_id or sensor_id == '':
+            if criar_sensor_automatico:
+                # Criar sensor automaticamente
+                tipo_sensor = 'S1'  # Padrão para multi-sensor
+                modelo_sensor = 'Multi-Sensor ESP32'
+                sensor_id = sql_db.adicionar_sensor(tipo_sensor, modelo_sensor)
+                
+                # Se temos um campo, associar o sensor ao campo
+                if campo_id:
+                    sql_db.adicionar_posicao_sensor(sensor_id, campo_id)
+                
+                sensor_criado = True
+            else:
+                return {'sucesso': False, 'erro': 'Sensor não especificado'}
+        else:
+            sensor_id = int(sensor_id)
+            # Verificar se o sensor existe
+            sensor = sql_db.obter_sensor(sensor_id)
+            if not sensor:
+                return {'sucesso': False, 'erro': f'Sensor com ID {sensor_id} não encontrado'}
+        
+        # Importar dados com timestamps simulados
+        registros_importados = 0
+        registros_erro = 0
+        
+        # Calcular timestamps simulados
+        # Começar da data/hora atual e retroceder 5 minutos por registro
+        data_fim = datetime.now()
+        total_registros = len(dados)
+        
+        print(f"Gerando timestamps simulados para {total_registros} registros")
+        print(f"Data final (mais recente): {data_fim}")
+        
+        # Calcular a data de início (total_registros * 5 minutos antes da data atual)
+        minutos_total = total_registros * 5
+        data_inicio = data_fim - timedelta(minutes=minutos_total)
+        print(f"Data inicial (mais antiga): {data_inicio}")
+        
+        for i, linha in enumerate(dados):
+            try:
+                if len(linha) < 6:
+                    registros_erro += 1
+                    continue
+                
+                # Parsing dos dados: timestamp;fosforo;potassio;ph;umidade;irrigacao
+                timestamp_original = linha[0]  # Manter para debug, mas não usar
+                fosforo = linha[1] == '1'
+                potassio = linha[2] == '1'
+                ph = float(linha[3])
+                umidade = float(linha[4])
+                irrigacao = linha[5] == '1'
+                
+                # Gerar timestamp simulado
+                # Começar da data mais antiga e adicionar 5 minutos por cada registro
+                data_hora_simulada = data_inicio + timedelta(minutes=i * 5)
+                
+                # Debug para os primeiros registros
+                if i < 3:
+                    print(f"Registro {i}: timestamp original={timestamp_original}, simulado={data_hora_simulada}")
+                
+                # Adicionar leitura de umidade
+                sql_db.adicionar_leitura(
+                    sensor_id=sensor_id,
+                    valor=umidade,
+                    unidade='%',
+                    data_hora=data_hora_simulada
+                )
+                
+                # Adicionar leitura de pH
+                sql_db.adicionar_leitura(
+                    sensor_id=sensor_id,
+                    valor=ph,
+                    unidade='pH',
+                    data_hora=data_hora_simulada
+                )
+                
+                # Adicionar leituras separadas para P e K (apenas se presentes)
+                if fosforo:
+                    sql_db.adicionar_leitura(
+                        sensor_id=sensor_id,
+                        valor=1,
+                        unidade='P_ppm',
+                        data_hora=data_hora_simulada
+                    )
+                
+                if potassio:
+                    sql_db.adicionar_leitura(
+                        sensor_id=sensor_id,
+                        valor=1,
+                        unidade='K_ppm',
+                        data_hora=data_hora_simulada
+                    )
+                
+                # Registrar estado de irrigação se necessário
+                if irrigacao and campo_id:
+                    try:
+                        # Calcular quantidade de água baseada na área do campo
+                        mongo_db = get_mongo_db()
+                        campo = mongo_db.obter_campo_por_id(campo_id)
+                        area_hectare = campo.get('campo', {}).get('area_total_hectare', 1) if campo else 1
+                        quantidade_agua = area_hectare * 150  # 150L por hectare
+                        
+                        sql_db.adicionar_aplicacao_recurso(
+                            campo_id=campo_id,
+                            tipo_recurso="água",
+                            quantidade=quantidade_agua,
+                            unidade="L",
+                            metodo_aplicacao="Sistema ESP32 Simulado",
+                            data_hora=data_hora_simulada
+                        )
+                    except Exception as e:
+                        print(f"Erro ao registrar irrigação: {e}")
+                        # Não falhar por causa da irrigação
+                
+                registros_importados += 1
+                
+            except Exception as e:
+                print(f"Erro ao processar linha {linha}: {str(e)}")
+                registros_erro += 1
+                continue
+        
+        print(f"Importação concluída: {registros_importados} registros importados")
+        
+        resultado = {
+            'sucesso': True,
+            'registros_importados': registros_importados,
+            'registros_erro': registros_erro,
+            'sensor_id': sensor_id,
+            'periodo_simulado': {
+                'inicio': data_inicio.strftime('%d/%m/%Y %H:%M'),
+                'fim': data_fim.strftime('%d/%m/%Y %H:%M'),
+                'intervalo': '5 minutos'
+            }
+        }
+        
+        if sensor_criado:
+            resultado['sensor_criado'] = True
+        
+        return resultado
+        
+    except Exception as e:
+        return {'sucesso': False, 'erro': str(e)}

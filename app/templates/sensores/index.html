@@ -13,11 +13,19 @@
         <a href="{{ url_for('sensores.relatorios') }}" class="btn btn-info">
             <i class="bi bi-graph-up"></i> Relatórios
         </a>
+        <button id="btn-iniciar-dashboard" class="btn btn-primary">
+            <i class="bi bi-bar-chart"></i> Abrir Dashboard
+        </button>
+        <a href="{{ url_for('sensores.upload_csv_form') }}" class="btn btn-info">
+            <i class="bi bi-upload"></i> Upload CSV
+        </a>
+        
         {% if is_debug %}
         <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalSimulador">
             <i class="bi bi-lightning"></i> Simular Leituras
         </button>
         {% endif %}
+
     </div>
 </div>
 
@@ -241,6 +249,39 @@
         const modal = new bootstrap.Modal(document.getElementById('modalLeitura'));
         modal.show();
     }
+
+    document.getElementById('btn-iniciar-dashboard').addEventListener('click', function() {
+        // Alterar o botão para indicar que está processando
+        this.innerHTML = '<i class="bi bi-hourglass-split"></i> Iniciando Dashboard...';
+        this.disabled = true;
+        
+        // Fazer requisição AJAX para iniciar o dashboard
+        fetch('{{ url_for("web.iniciar_dashboard") }}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Restaurar o botão
+            this.innerHTML = '<i class="bi bi-bar-chart"></i> Abrir Dashboard';
+            this.disabled = false;
+            
+            // Informar o usuário
+            alert('Dashboard iniciado! Abrindo em uma nova janela...');
+            
+            // Abrir o dashboard em uma nova janela/aba
+            //window.open(data.url, '_blank');
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            // Restaurar o botão
+            this.innerHTML = '<i class="bi bi-bar-chart"></i> Abrir Dashboard';
+            this.disabled = false;
+            
+            alert('Erro ao iniciar o dashboard. Por favor, tente novamente.');
+        });
+    });
     
     {% if is_debug %}
     function simularLeituras() {

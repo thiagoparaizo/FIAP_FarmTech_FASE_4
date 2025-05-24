@@ -10,7 +10,10 @@ class Config:
     # Configuração do banco de dados relacional
     SQL_DATABASE_URI = os.environ.get('SQL_DATABASE_URI') or 'mysql://user:password@localhost/farmtech_sensors'
     
-    # Adicionar conexão com Oracle
+    # Conexão com Oracle
     ORACLE_DATABASE_URI = os.environ.get('ORACLE_DATABASE_URI') or 'oracle+cx_oracle://usuario:senha@localhost:1521/XE'
+    
+    # Configuração do OpenWeatherMap
+    OPENWEATHER_API_KEY = os.environ.get('OPENWEATHER_API_KEY') or 'sua_chave_aqui'
     
     DEBUG = os.environ.get('FLASK_ENV') == 'development'

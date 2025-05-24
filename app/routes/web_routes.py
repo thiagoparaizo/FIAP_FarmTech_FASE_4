@@ -3,6 +3,12 @@ from app.services.db_service import DatabaseService
 from app.models.cultura import Cultura
 from app.models.campo import Campo
 import json
+import subprocess
+import os
+import time
+import threading
+import webbrowser
+from flask import redirect, url_for, jsonify
 
 web_bp = Blueprint('web', __name__)
 
@@ -282,3 +288,53 @@ def calculadora():
 def modo_simples():
     """Página do modo simples (similar a terminal)"""
     return render_template('modo_simples.html')
+
+
+def iniciar_streamlit_dashboard():
+    """Função para iniciar o dashboard Streamlit em segundo plano"""
+    script_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'scripts', 'dashboard.py')
+    
+    # Verificar se o processo já está em execução
+    try:
+        # Iniciar o processo Streamlit
+        process = subprocess.Popen(
+            ["streamlit", "run", script_path], 
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        
+        # Aguardar para garantir que o servidor inicie
+        time.sleep(3)
+        
+        # Opcional: abrir o navegador automaticamente
+        #webbrowser.open('http://localhost:8501')
+    except Exception as e:
+        print(f"Erro ao iniciar Streamlit: {str(e)}")
+
+@web_bp.route('/iniciar-dashboard')
+def iniciar_dashboard():
+    """Rota para iniciar o dashboard Streamlit"""
+    # Iniciar o dashboard em uma thread para não bloquear a resposta HTTP
+    thread = threading.Thread(target=iniciar_streamlit_dashboard)
+    thread.daemon = True
+    thread.start()
+    
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Dashboard iniciado com sucesso",
+        "url": "http://localhost:8501"
+    })
+    
+    # Redirecionar para a página de sensores enquanto o dashboard inicia
+    # Ou retornar JSON se for uma chamada AJAX
+    # if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    #     return jsonify({
+    #         "sucesso": True,
+    #         "mensagem": "Dashboard está iniciando...",
+    #         "url": "http://localhost:8501"
+    #     })
+    # else:
+    #     # Redirecionar para a página de sensores com mensagem
+    #     flash('Dashboard está sendo iniciado. Aguarde um momento...', 'info')
+    #     return redirect(url_for('sensores.index'))

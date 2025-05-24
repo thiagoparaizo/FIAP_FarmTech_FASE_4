@@ -35,10 +35,16 @@
                             <i class="bi bi-map"></i> Campos
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('sensores.index') }}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="sensoresDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-broadcast"></i> Sensores
                         </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('sensores.index') }}">Visualizar Sensores</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('sensores.adicionar_sensor') }}">Adicionar Sensor</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('sensores.upload_csv_form') }}">Upload CSV</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('sensores.relatorios') }}">Relatórios</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('catalogo.index') }}">

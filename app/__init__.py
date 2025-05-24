@@ -1,3 +1,5 @@
+#import pymysql
+#pymysql.install_as_MySQLdb()
 from flask import Flask, render_template
 from pymongo import MongoClient
 from app.services.db_service import DatabaseService

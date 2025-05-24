@@ -420,3 +420,78 @@ class SQLDatabaseService:
             raise e
         finally:
             session.close()
+            
+def adicionar_leitura(self, sensor_id, valor, unidade, data_hora=None, valido=True):
+    """Adiciona uma nova leitura de sensor"""
+    session = self.get_session()
+    try:
+        # Obter o tipo de sensor
+        sensor = session.query(Sensor).filter_by(id=sensor_id).first()
+        
+        if not sensor:
+            raise ValueError(f"Sensor com ID {sensor_id} não encontrado")
+        
+        # Garantir que o valor seja convertido adequadamente
+        if isinstance(valor, dict):
+            # Se for um dicionário, converter para JSON string
+            import json
+            valor_str = json.dumps(valor)
+        elif isinstance(valor, (int, float)):
+            # Se for numérico, converter para string
+            valor_str = str(valor)
+        else:
+            # Se já for string, usar diretamente
+            valor_str = str(valor)
+        
+        # Para sensores de nutrientes (S3), processar valores JSON
+        if sensor.tipo == 'S3' and isinstance(valor, str) and valor.startswith('{'):
+            try:
+                import json
+                nutrientes = json.loads(valor)
+                
+                # Armazenar as leituras separadamente
+                if 'P' in nutrientes and nutrientes['P'] > 0:
+                    nova_leitura_p = LeituraSensor(
+                        sensor_id=sensor_id,
+                        data_hora=data_hora or datetime.now(),
+                        valor=str(nutrientes['P']),
+                        unidade='P_ppm',
+                        valido=valido
+                    )
+                    session.add(nova_leitura_p)
+                
+                if 'K' in nutrientes and nutrientes['K'] > 0:
+                    nova_leitura_k = LeituraSensor(
+                        sensor_id=sensor_id,
+                        data_hora=data_hora or datetime.now(),
+                        valor=str(nutrientes['K']),
+                        unidade='K_ppm',
+                        valido=valido
+                    )
+                    session.add(nova_leitura_k)
+                
+                session.commit()
+                return True
+                
+            except (json.JSONDecodeError, ValueError) as e:
+                session.rollback()
+                raise ValueError(f"Erro ao processar dados JSON: {str(e)}")
+        
+        # Para outros sensores, armazenar o valor diretamente
+        else:
+            nova_leitura = LeituraSensor(
+                sensor_id=sensor_id,
+                data_hora=data_hora or datetime.now(),
+                valor=valor_str,
+                unidade=unidade,
+                valido=valido
+            )
+            session.add(nova_leitura)
+            session.commit()
+            return nova_leitura.id
+    
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
