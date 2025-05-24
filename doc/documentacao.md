@@ -222,9 +222,9 @@ Interface específica para visualização de dados climáticos integrados com in
 
 ## 🔧 Tecnologias Utilizadas
 
-- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap
+- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap, Streamlit
 - **Backend**: Flask (Python)
-- **Banco de Dados**: MongoDB (dados gerais), MySQL (sensores)
+- **Banco de Dados**: MongoDB (dados gerais), MySQL (sensores), Oracle (catalogo de sensores)
 - **Visualização**: Plotly.js, Chart.js
 - **APIs**: Integração com serviços meteorológicos
 
