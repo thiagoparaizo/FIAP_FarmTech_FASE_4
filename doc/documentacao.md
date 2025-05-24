@@ -175,32 +175,32 @@ Interface simplificada tipo terminal para:
 ### 7. Dashboards de Sensores Avançados
 
 #### 7.1 Dashboard Geral
-![Dashboard Geral](FarmTech-screenShot_17_sensores_dashboard_1.jpg)
+![Dashboard Geral](FarmTech-screenShot_17_sensores_dashborad_1.jpg)
 
 Painel principal com visão consolidada de todos os sensores do sistema.
 
 #### 7.2 Dashboard Gerencial
-![Dashboard Gerencial](FarmTech-screenShot_17_sensores_dashboard_geral_1.jpg)
+![Dashboard Gerencial](FarmTech-screenShot_17_sensores_dashborad_geral_1.jpg)
 
 Interface executiva com KPIs e métricas principais para tomada de decisão.
 
 #### 7.3 Análise de Leituras
-![Análise de Leituras](FarmTech-screenShot_17_sensores_dashboard_leituras.jpg)
+![Análise de Leituras](FarmTech-screenShot_17_sensores_dashborad_leituras.jpg)
 
 Dashboard focado na análise detalhada das leituras dos sensores com gráficos temporais e correlações.
 
 #### 7.4 Monitoramento de Nutrientes
-![Dashboard Nutrientes](FarmTech-screenShot_17_sensores_dashboard_leituras_nutrientes.jpg)
+![Dashboard Nutrientes](FarmTech-screenShot_17_sensores_dashborad_leituras_nutrientes.jpg)
 
 Painel especializado para monitoramento de níveis de nutrientes no solo (NPK).
 
 #### 7.5 Monitoramento de pH
-![Dashboard pH](FarmTech-screenShot_17_sensores_dashboard_leituras_ph.jpg)
+![Dashboard pH](FarmTech-screenShot_17_sensores_dashborad_leituras_ph.jpg)
 
 Interface dedicada ao acompanhamento dos níveis de pH do solo.
 
 #### 7.6 Dashboard de Nutrientes Específicos
-![Nutrientes Específicos](FarmTech-screenShot_17_sensores_dashboard_nutrientes.jpg)
+![Nutrientes Específicos](FarmTech-screenShot_17_sensores_dashborad_nutrientes.jpg)
 
 Análise detalhada de nutrientes específicos com tendências e recomendações.
 
