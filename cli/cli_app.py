@@ -258,19 +258,108 @@ def atualizar_cultura():
         cultura = culturas[indice]
         cultura_id = cultura['_id']
         
-        # Solicitar novos dados (com os valores atuais como padrão)
         print("\nDigite os novos valores (ou pressione Enter para manter os atuais):")
-        
+
+        dados_atualizados = {}
+
+        # Campos simples
         nome = input(f"Nome da Cultura [{cultura['nome_cultura']}]: ") or cultura['nome_cultura']
         nome_cientifico = input(f"Nome Científico [{cultura['nome_cientifico']}]: ") or cultura['nome_cientifico']
-        
-        # Resto da implementação de atualização...
-        # (código omitido para brevidade, similar ao adicionar_cultura)
-        
+        descricao = input(f"Descrição [{cultura['descricao']}]: ") or cultura['descricao']
+
+        dados_atualizados.update({
+            "nome_cultura": nome,
+            "nome_cientifico": nome_cientifico,
+            "descricao": descricao
+        })
+
+        # ======= Dados Agronômicos =======
+        if input("\nDeseja atualizar Dados Agronômicos? (s/n): ").lower() == 's':
+            dados_agronomicos = cultura.get('dados_agronomicos', {})
+
+            espacamento_linhas = input(f"Espaçamento entre linhas (m) [{dados_agronomicos.get('densidade_plantio', {}).get('espacamento_m', {}).get('entre_linhas', '')}]: ")
+            espacamento_plantas = input(f"Espaçamento entre plantas (m) [{dados_agronomicos.get('densidade_plantio', {}).get('espacamento_m', {}).get('entre_plantas', '')}]: ")
+            plantas_por_ha = input(f"Plantas por hectare [{dados_agronomicos.get('densidade_plantio', {}).get('plantas_por_hectare', '')}]: ")
+            ciclo_min = input(f"Ciclo de produção mínimo (dias) [{dados_agronomicos.get('ciclo_producao_dias', {}).get('minimo', '')}]: ")
+            ciclo_max = input(f"Ciclo de produção máximo (dias) [{dados_agronomicos.get('ciclo_producao_dias', {}).get('maximo', '')}]: ")
+
+            dados_atualizados['dados_agronomicos'] = {
+                "densidade_plantio": {
+                    "espacamento_m": {
+                        "entre_linhas": float(espacamento_linhas) if espacamento_linhas else dados_agronomicos.get('densidade_plantio', {}).get('espacamento_m', {}).get('entre_linhas'),
+                        "entre_plantas": float(espacamento_plantas) if espacamento_plantas else dados_agronomicos.get('densidade_plantio', {}).get('espacamento_m', {}).get('entre_plantas')
+                    },
+                    "plantas_por_hectare": int(plantas_por_ha) if plantas_por_ha else dados_agronomicos.get('densidade_plantio', {}).get('plantas_por_hectare')
+                },
+                "ciclo_producao_dias": {
+                    "minimo": int(ciclo_min) if ciclo_min else dados_agronomicos.get('ciclo_producao_dias', {}).get('minimo'),
+                    "maximo": int(ciclo_max) if ciclo_max else dados_agronomicos.get('ciclo_producao_dias', {}).get('maximo')
+                }
+            }
+
+        # ======= Clima e Solo =======
+        if input("\nDeseja atualizar Dados de Clima e Solo? (s/n): ").lower() == 's':
+            clima_solo = cultura.get('clima_solo', {})
+
+            temp_min = input(f"Temperatura mínima ideal (°C) [{clima_solo.get('temperatura_ideal_c', {}).get('minima', '')}]: ")
+            temp_max = input(f"Temperatura máxima ideal (°C) [{clima_solo.get('temperatura_ideal_c', {}).get('maxima', '')}]: ")
+            precipitacao_min = input(f"Precipitação mínima (mm) [{clima_solo.get('precipitacao_minima_mm', '')}]: ")
+            precipitacao_max = input(f"Precipitação máxima (mm) [{clima_solo.get('precipitacao_maxima_mm', '')}]: ")
+            tipo_solo = input(f"Tipo de solo ideal [{clima_solo.get('tipo_solo_ideal', '')}]: ") or clima_solo.get('tipo_solo_ideal', '')
+            ph_min = input(f"pH mínimo [{clima_solo.get('ph_ideal', {}).get('minimo', '')}]: ")
+            ph_max = input(f"pH máximo [{clima_solo.get('ph_ideal', {}).get('maximo', '')}]: ")
+            tolerancia = input(f"Tolerância à salinidade [{clima_solo.get('tolerancia_salinidade', '')}]: ") or clima_solo.get('tolerancia_salinidade', '')
+            estrategias = input(f"Estratégias climáticas (separadas por vírgula) [{', '.join(clima_solo.get('estrategias_climaticas', []))}]: ")
+
+            estrategias_list = [e.strip() for e in estrategias.split(',')] if estrategias else clima_solo.get('estrategias_climaticas', [])
+
+            dados_atualizados['clima_solo'] = {
+                "temperatura_ideal_c": {
+                    "minima": float(temp_min) if temp_min else clima_solo.get('temperatura_ideal_c', {}).get('minima'),
+                    "maxima": float(temp_max) if temp_max else clima_solo.get('temperatura_ideal_c', {}).get('maxima')
+                },
+                "precipitacao_minima_mm": float(precipitacao_min) if precipitacao_min else clima_solo.get('precipitacao_minima_mm'),
+                "precipitacao_maxima_mm": float(precipitacao_max) if precipitacao_max else clima_solo.get('precipitacao_maxima_mm'),
+                "tipo_solo_ideal": tipo_solo,
+                "ph_ideal": {
+                    "minimo": float(ph_min) if ph_min else clima_solo.get('ph_ideal', {}).get('minimo'),
+                    "maximo": float(ph_max) if ph_max else clima_solo.get('ph_ideal', {}).get('maximo')
+                },
+                "tolerancia_salinidade": tolerancia,
+                "estrategias_climaticas": estrategias_list
+            }
+
+        # ======= Fertilizantes e Insumos =======
+        if input("\nDeseja atualizar Fertilizantes e Insumos? (s/n): ").lower() == 's':
+            fertilizantes = cultura.get('fertilizantes_insumos', {})
+
+            N = input(f"N (kg/ha) [{fertilizantes.get('adubacao_NPK_por_hectare_kg', {}).get('N', '')}]: ")
+            P = input(f"P2O5 (kg/ha) [{fertilizantes.get('adubacao_NPK_por_hectare_kg', {}).get('P2O5', '')}]: ")
+            K = input(f"K2O (kg/ha) [{fertilizantes.get('adubacao_NPK_por_hectare_kg', {}).get('K2O', '')}]: ")
+            adubacao_organica = input(f"Adubação orgânica recomendada [{fertilizantes.get('adubacao_organica_recomendada', '')}]: ") or fertilizantes.get('adubacao_organica_recomendada', '')
+            calagem = input(f"Calagem [{fertilizantes.get('correcao_solo', {}).get('calagem', '')}]: ") or fertilizantes.get('correcao_solo', {}).get('calagem', '')
+            gessagem = input(f"Gessagem [{fertilizantes.get('correcao_solo', {}).get('gessagem', '')}]: ") or fertilizantes.get('correcao_solo', {}).get('gessagem', '')
+            frequencia = input(f"Frequência de adubação [{fertilizantes.get('frequencia_adubacao', '')}]: ") or fertilizantes.get('frequencia_adubacao', '')
+
+            dados_atualizados['fertilizantes_insumos'] = {
+                "adubacao_NPK_por_hectare_kg": {
+                    "N": float(N) if N else fertilizantes.get('adubacao_NPK_por_hectare_kg', {}).get('N'),
+                    "P2O5": float(P) if P else fertilizantes.get('adubacao_NPK_por_hectare_kg', {}).get('P2O5'),
+                    "K2O": float(K) if K else fertilizantes.get('adubacao_NPK_por_hectare_kg', {}).get('K2O')
+                },
+                "adubacao_organica_recomendada": adubacao_organica,
+                "correcao_solo": {
+                    "calagem": calagem,
+                    "gessagem": gessagem
+                },
+                "frequencia_adubacao": frequencia
+            }
+
         # Atualizar no banco de dados
-        db_service.atualizar_cultura(cultura_id, {"nome_cultura": nome, "nome_cientifico": nome_cientifico})
+        db_service.atualizar_cultura(cultura_id, dados_atualizados)
+
         print("\nCultura atualizada com sucesso!")
-        
+
     except Exception as e:
         print(f"\nErro ao atualizar cultura: {str(e)}")
     
@@ -742,24 +831,139 @@ def atualizar_campo():
         campo = campos[indice]
         campo_id = campo['_id']
         
-        # Solicitar novos dados (com os valores atuais como padrão)
+        dados_atualizados = {}
+        
         print("\nDigite os novos valores (ou pressione Enter para manter os atuais):")
         
+        # ===== Nome do produtor =====
         nome_produtor = input(f"Nome do Produtor [{campo['nome_produtor']}]: ") or campo['nome_produtor']
-        municipio = input(f"Município [{campo['localizacao']['municipio']}]: ") or campo['localizacao']['municipio']
-        regiao = input(f"Região [{campo['localizacao']['regiao']}]: ") or campo['localizacao']['regiao']
-        
-        # Atualizar no banco de dados (versão simplificada)
-        db_service.atualizar_campo(campo_id, {
-            "nome_produtor": nome_produtor,
-            "localizacao": {
+        dados_atualizados['nome_produtor'] = nome_produtor
+
+        # ===== Localização =====
+        if input("\nDeseja atualizar a Localização? (s/n): ").lower() == 's':
+            localizacao = campo.get('localizacao', {})
+            municipio = input(f"Município [{localizacao.get('municipio', '')}]: ") or localizacao.get('municipio', '')
+            regiao = input(f"Região [{localizacao.get('regiao', '')}]: ") or localizacao.get('regiao', '')
+            dados_atualizados['localizacao'] = {
                 "municipio": municipio,
                 "regiao": regiao
             }
-        })
-        
+
+        # ===== Dados do Campo =====
+        if input("\nDeseja atualizar os Dados do Campo? (s/n): ").lower() == 's':
+            campo_info = campo.get('campo', {})
+
+            cultura = input(f"Cultura plantada [{campo_info.get('cultura_plantada', '')}]: ") or campo_info.get('cultura_plantada', '')
+            data_plantio = input(f"Data de Plantio [{campo_info.get('data_plantio', '')}]: ") or campo_info.get('data_plantio', '')
+
+            tipo_geometria_atual = campo_info.get('tipo_geometria', '')
+            print(f"Tipo de Geometria atual [{tipo_geometria_atual}]")
+            print("Opções válidas: retangular, triangular, circular, trapezoidal")
+
+            tipo_geometria = input(f"Tipo de Geometria [{tipo_geometria_atual}]: ") or tipo_geometria_atual
+
+            while tipo_geometria.lower() not in ["retangular", "triangular", "circular", "trapezoidal"]:
+                print("Tipo inválido. Escolha entre: retangular, triangular, circular ou trapezoidal.")
+                tipo_geometria = input(f"Tipo de Geometria [{tipo_geometria_atual}]: ") or tipo_geometria_atual
+
+            campo_atualizado = {
+                "cultura_plantada": cultura,
+                "data_plantio": data_plantio,
+                "tipo_geometria": tipo_geometria.lower()
+            }
+
+            # Atualizar geometria específica
+            if tipo_geometria == "retangular":
+                comprimento = input(f"Comprimento (m) [{campo_info.get('comprimento_m', '')}]: ")
+                largura = input(f"Largura (m) [{campo_info.get('largura_m', '')}]: ")
+                campo_atualizado.update({
+                    "comprimento_m": float(comprimento) if comprimento else campo_info.get('comprimento_m'),
+                    "largura_m": float(largura) if largura else campo_info.get('largura_m')
+                })
+
+            elif tipo_geometria == "triangular":
+                base = input(f"Base (m) [{campo_info.get('base_m', '')}]: ")
+                altura = input(f"Altura (m) [{campo_info.get('altura_m', '')}]: ")
+                campo_atualizado.update({
+                    "base_m": float(base) if base else campo_info.get('base_m'),
+                    "altura_m": float(altura) if altura else campo_info.get('altura_m')
+                })
+
+            elif tipo_geometria == "circular":
+                raio = input(f"Raio (m) [{campo_info.get('raio_m', '')}]: ")
+                campo_atualizado.update({
+                    "raio_m": float(raio) if raio else campo_info.get('raio_m')
+                })
+
+            elif tipo_geometria == "trapezoidal":
+                base_maior = input(f"Base Maior (m) [{campo_info.get('base_maior_m', '')}]: ")
+                base_menor = input(f"Base Menor (m) [{campo_info.get('base_menor_m', '')}]: ")
+                altura = input(f"Altura (m) [{campo_info.get('altura_m', '')}]: ")
+                campo_atualizado.update({
+                    "base_maior_m": float(base_maior) if base_maior else campo_info.get('base_maior_m'),
+                    "base_menor_m": float(base_menor) if base_menor else campo_info.get('base_menor_m'),
+                    "altura_m": float(altura) if altura else campo_info.get('altura_m')
+                })
+
+            # Área
+            area_m2 = input(f"Área total (m²) [{campo_info.get('area_total_m2', '')}]: ")
+            area_ha = input(f"Área total (hectare) [{campo_info.get('area_total_hectare', '')}]: ")
+
+            campo_atualizado.update({
+                "area_total_m2": float(area_m2) if area_m2 else campo_info.get('area_total_m2'),
+                "area_total_hectare": float(area_ha) if area_ha else campo_info.get('area_total_hectare')
+            })
+
+            # ===== Dados de Insumos =====
+            if input("\nDeseja atualizar os Dados de Insumos? (s/n): ").lower() == 's':
+                insumos = campo_info.get('dados_insumos', {})
+
+                N = input(f"N (kg) [{insumos.get('fertilizante_recomendado', {}).get('N', '')}]: ")
+                P = input(f"P2O5 (kg) [{insumos.get('fertilizante_recomendado', {}).get('P2O5', '')}]: ")
+                K = input(f"K2O (kg) [{insumos.get('fertilizante_recomendado', {}).get('K2O', '')}]: ")
+
+                quantidade_total_kg = input(f"Quantidade total de fertilizante (kg) [{insumos.get('quantidade_total_kg', '')}]: ")
+                quantidade_por_metro = input(f"Quantidade por metro linear (kg) [{insumos.get('quantidade_por_metro_linear_kg', '')}]: ")
+
+                dados_insumos = {
+                    "fertilizante_recomendado": {
+                        "N": float(N) if N else insumos.get('fertilizante_recomendado', {}).get('N'),
+                        "P2O5": float(P) if P else insumos.get('fertilizante_recomendado', {}).get('P2O5'),
+                        "K2O": float(K) if K else insumos.get('fertilizante_recomendado', {}).get('K2O')
+                    },
+                    "quantidade_total_kg": float(quantidade_total_kg) if quantidade_total_kg else insumos.get('quantidade_total_kg'),
+                    "quantidade_por_metro_linear_kg": float(quantidade_por_metro) if quantidade_por_metro else insumos.get('quantidade_por_metro_linear_kg')
+                }
+
+                # ===== Dados de Irrigação =====
+                if 'irrigacao' in insumos and input("\nDeseja atualizar os Dados de Irrigação? (s/n): ").lower() == 's':
+                    irrigacao = insumos.get('irrigacao', {})
+                    metodo = input(f"Método de irrigação [{irrigacao.get('metodo', '')}]: ") or irrigacao.get('metodo', '')
+                    volume_metro = input(f"Volume (L/m) [{irrigacao.get('volume_litros_por_metro', '')}]: ")
+                    ruas = input(f"Quantidade de ruas [{irrigacao.get('quantidade_ruas', '')}]: ")
+                    volume_total = input(f"Volume total (L) [{irrigacao.get('quantidade_total_litros', '')}]: ")
+
+                    dados_insumos['irrigacao'] = {
+                        "metodo": metodo,
+                        "volume_litros_por_metro": float(volume_metro) if volume_metro else irrigacao.get('volume_litros_por_metro'),
+                        "quantidade_ruas": int(ruas) if ruas else irrigacao.get('quantidade_ruas'),
+                        "quantidade_total_litros": float(volume_total) if volume_total else irrigacao.get('quantidade_total_litros')
+                    }
+                else:
+                    if 'irrigacao' in insumos:
+                        dados_insumos['irrigacao'] = insumos['irrigacao']
+
+                campo_atualizado['dados_insumos'] = dados_insumos
+            else:
+                campo_atualizado['dados_insumos'] = campo_info.get('dados_insumos', {})
+
+            dados_atualizados['campo'] = campo_atualizado
+
+        # ===== Atualizar no banco =====
+        db_service.atualizar_campo(campo_id, dados_atualizados)
+
         print("\nCampo atualizado com sucesso!")
-        
+
     except Exception as e:
         print(f"\nErro ao atualizar campo: {str(e)}")
     

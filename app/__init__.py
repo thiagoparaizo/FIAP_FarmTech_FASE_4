@@ -41,8 +41,13 @@ def create_app(config_object='config.Config'):
         # Inicializar banco de dados relacional
         inicializar_banco_dados_relacional(app.config['SQL_DATABASE_URI'])
         
-        # Oracle - dados de exemplo
-        oracle_db_service.inicializar_dados_exemplo()
+        try:
+            # Oracle - dados de exemplo # TODO comentar caso não tenha o Oracle configurado
+            oracle_db_service.inicializar_dados_exemplo()
+        except Exception as e:
+            print(f"Erro ao inicializar banco de dados Oracle: {e}")
+            app.flash(f"Erro ao inicializar banco de dados Oracle: {e}", "danger")
+            pass
     
     # Registrar blueprints
     app.register_blueprint(web_bp)

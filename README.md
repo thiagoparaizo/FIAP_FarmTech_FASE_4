@@ -1,7 +1,7 @@
 # FIAP - Faculdade de Informática e Administração Paulista
 
 <p align="center">
-<a href= "https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+<a href= "https://www.fiap.com.br/"><img src="https://avatars.githubusercontent.com/u/70102670?s=200&v=4" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
 </p>
 
 <br>
@@ -29,7 +29,7 @@ Esta aplicação web leve implementada em Python integra controle de produção,
 [ Veja a Documentação e Sreenshots do Sistema em funcionamento ](doc/documentacao.md)
 
 ## Análise e Modelo de Dados usados no Sistema
-![Veja a Análise e Modelo de Dados usados no Sistema](doc/farmtech_modelagem_dados.md)
+[Veja a Análise e Modelo de Dados usados no Sistema](doc/farmtech_modelagem_dados.md)
 
 
 ## 🚀 Novas Funcionalidades Implementadas
