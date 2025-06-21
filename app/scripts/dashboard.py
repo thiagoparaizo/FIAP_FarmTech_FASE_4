@@ -29,6 +29,7 @@ st.set_page_config(
 
 # Título
 st.title("🌱 FarmTech Solutions - Dashboard de Sensores")
+st.markdown("*Use dashboard_ml.py para funcionalidades avançadas de IA*")
 
 # Conexão com o banco de dados
 @st.cache_resource
@@ -123,6 +124,9 @@ periodo = st.sidebar.slider(
     max_value=90,
     value=30
 )
+
+# Botão para dashboard avançado
+st.info("💡 **Para análises de IA e ML, use:** `streamlit run dashboard_ml.py`")
 
 # Botão para atualizar
 if st.sidebar.button("Atualizar Dados"):
@@ -270,3 +274,6 @@ with st.expander("Sobre o Dashboard"):
         
         Os dados são atualizados conforme as leituras são registradas no sistema.
     """)
+    st.markdown("---")
+    st.markdown("**Para funcionalidades avançadas de Machine Learning, execute:**")
+    st.code("streamlit run app/scripts/dashboard_ml.py")

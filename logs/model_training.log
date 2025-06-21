@@ -1,0 +1,839 @@
+2025-06-20 21:55:26,670 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 21:55:26,670 - __main__ - INFO - Parâmetros: Namespace(days=30, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 21:55:26,671 - __main__ - INFO - Inicializando serviços...
+2025-06-20 21:55:26,978 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 21:55:26,978 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 21:55:26,979 - __main__ - INFO - Coletando dados dos últimos 30 dias...
+2025-06-20 21:55:27,134 - app.ml.model_trainer - INFO - Coletados 1750 registros para treinamento
+2025-06-20 21:55:27,134 - __main__ - INFO - Coletados 1750 registros para treinamento
+2025-06-20 21:55:27,135 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 21:55:27,135 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-21 21:56:59 a 2025-06-19 18:21:00
+2025-06-20 21:55:27,857 - app.services.climate_service - INFO - Coletados 720 pontos climáticos históricos
+2025-06-20 21:55:28,020 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 1750 pontos com informações climáticas
+2025-06-20 21:55:28,021 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 21:55:28,021 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 21:55:28,030 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 1746 registros limpos
+2025-06-20 21:55:30,255 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 21:55:30,256 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 21:55:30,256 - app.ml.irrigation_predictor - INFO - MAE Umidade: 0.011
+2025-06-20 21:55:30,257 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 21:55:30,257 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 21:55:30,257 - __main__ - INFO - MAE Umidade: 0.011
+2025-06-20 21:55:30,257 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 21:55:30,258 - __main__ - INFO - CV Umidade: 0.068 ± 0.132
+2025-06-20 21:55:30,258 - __main__ - INFO - Amostras de Treino: 1746
+2025-06-20 21:55:30,258 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 21:55:30,320 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 21:55:30,321 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 21:55:30,321 - __main__ - INFO - Executando teste de predição...
+2025-06-20 21:55:30,321 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 21:55:30,322 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 21:55:30,348 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 21:55:30,348 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 21:55:30,349 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 21:55:30,349 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 21:55:30,350 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 21:55:30,350 - __main__ - INFO - Analisando importância das features...
+2025-06-20 21:55:30,355 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 21:55:30,355 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 21:55:30,356 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 21:55:30,356 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 21:55:30,356 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 21:55:30,357 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 21:55:30,357 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 21:55:30,357 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 21:55:30,358 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 21:55:30,358 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 21:55:30,358 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 21:55:30,358 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 21:55:30,359 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 21:55:30,359 - __main__ - INFO - umidade_atual            : 0.9482
+2025-06-20 21:55:30,359 - __main__ - INFO - umidade_variacao         : 0.0352
+2025-06-20 21:55:30,360 - __main__ - INFO - umidade_tendencia        : 0.0105
+2025-06-20 21:55:30,360 - __main__ - INFO - ph_tendencia             : 0.0039
+2025-06-20 21:55:30,360 - __main__ - INFO - ph_categoria_encoded     : 0.0007
+2025-06-20 21:55:30,360 - __main__ - INFO - ph_atual                 : 0.0006
+2025-06-20 21:55:30,361 - __main__ - INFO - wind_speed               : 0.0003
+2025-06-20 21:55:30,361 - __main__ - INFO - temperature              : 0.0003
+2025-06-20 21:55:30,361 - __main__ - INFO - temp_tendencia           : 0.0001
+2025-06-20 21:55:30,361 - __main__ - INFO - pressure                 : 0.0001
+2025-06-20 21:55:30,363 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 22:17:20,926 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 22:17:20,927 - __main__ - INFO - Parâmetros: Namespace(days=30, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 22:17:20,927 - __main__ - INFO - Inicializando serviços...
+2025-06-20 22:17:21,008 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 22:17:21,008 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 22:17:21,008 - __main__ - INFO - Coletando dados dos últimos 30 dias...
+2025-06-20 22:17:21,201 - app.ml.model_trainer - INFO - Coletados 2597 registros para treinamento
+2025-06-20 22:17:21,201 - __main__ - INFO - Coletados 2597 registros para treinamento
+2025-06-20 22:17:21,201 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 22:17:21,202 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-21 22:21:59 a 2025-06-20 22:06:18
+2025-06-20 22:17:22,133 - app.services.climate_service - INFO - Coletados 744 pontos climáticos históricos
+2025-06-20 22:17:22,451 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 2597 pontos com informações climáticas
+2025-06-20 22:17:22,452 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:17:22,452 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:17:22,461 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 2593 registros limpos
+2025-06-20 22:17:24,866 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 22:17:24,867 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:17:24,867 - app.ml.irrigation_predictor - INFO - MAE Umidade: 0.003
+2025-06-20 22:17:24,868 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 22:17:24,868 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:17:24,868 - __main__ - INFO - MAE Umidade: 0.003
+2025-06-20 22:17:24,869 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 22:17:24,869 - __main__ - INFO - CV Umidade: 0.020 ± 0.035
+2025-06-20 22:17:24,869 - __main__ - INFO - Amostras de Treino: 2593
+2025-06-20 22:17:24,870 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 22:17:24,928 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 22:17:24,929 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 22:17:24,929 - __main__ - INFO - Executando teste de predição...
+2025-06-20 22:17:24,929 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 22:17:24,929 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 22:17:24,954 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 22:17:24,954 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 22:17:24,955 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 22:17:24,956 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 22:17:24,956 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 22:17:24,957 - __main__ - INFO - Analisando importância das features...
+2025-06-20 22:17:24,962 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 22:17:24,962 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 22:17:24,962 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 22:17:24,963 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 22:17:24,963 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:17:24,963 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:17:24,964 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:17:24,964 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 22:17:24,964 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 22:17:24,965 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:17:24,965 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 22:17:24,965 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:17:24,965 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 22:17:24,966 - __main__ - INFO - umidade_atual            : 0.9901
+2025-06-20 22:17:24,966 - __main__ - INFO - umidade_variacao         : 0.0066
+2025-06-20 22:17:24,966 - __main__ - INFO - umidade_tendencia        : 0.0025
+2025-06-20 22:17:24,966 - __main__ - INFO - ph_categoria_encoded     : 0.0003
+2025-06-20 22:17:24,967 - __main__ - INFO - ph_atual                 : 0.0002
+2025-06-20 22:17:24,967 - __main__ - INFO - ph_tendencia             : 0.0002
+2025-06-20 22:17:24,967 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:17:24,967 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:17:24,967 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:17:24,968 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:17:24,968 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 22:18:43,141 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 22:18:43,143 - __main__ - INFO - Parâmetros: Namespace(days=30, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 22:18:43,143 - __main__ - INFO - Inicializando serviços...
+2025-06-20 22:18:43,222 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 22:18:43,224 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 22:18:43,224 - __main__ - INFO - Coletando dados dos últimos 30 dias...
+2025-06-20 22:18:43,397 - app.ml.model_trainer - INFO - Coletados 2597 registros para treinamento
+2025-06-20 22:18:43,398 - __main__ - INFO - Coletados 2597 registros para treinamento
+2025-06-20 22:18:43,398 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 22:18:43,399 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-21 22:21:59 a 2025-06-20 22:06:18
+2025-06-20 22:18:44,113 - app.services.climate_service - INFO - Coletados 744 pontos climáticos históricos
+2025-06-20 22:18:44,390 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 2597 pontos com informações climáticas
+2025-06-20 22:18:44,391 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:18:44,391 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:18:44,400 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 2593 registros limpos
+2025-06-20 22:18:46,801 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 22:18:46,803 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:18:46,803 - app.ml.irrigation_predictor - INFO - MAE Umidade: 0.003
+2025-06-20 22:18:46,803 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 22:18:46,804 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:18:46,804 - __main__ - INFO - MAE Umidade: 0.003
+2025-06-20 22:18:46,804 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 22:18:46,805 - __main__ - INFO - CV Umidade: 0.020 ± 0.035
+2025-06-20 22:18:46,805 - __main__ - INFO - Amostras de Treino: 2593
+2025-06-20 22:18:46,805 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 22:18:46,865 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 22:18:46,866 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 22:18:46,866 - __main__ - INFO - Executando teste de predição...
+2025-06-20 22:18:46,867 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 22:18:46,867 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 22:18:46,891 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 22:18:46,892 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 22:18:46,892 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 22:18:46,892 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 22:18:46,892 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 22:18:46,892 - __main__ - INFO - Analisando importância das features...
+2025-06-20 22:18:46,897 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 22:18:46,897 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 22:18:46,897 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 22:18:46,899 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 22:18:46,899 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:18:46,900 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:18:46,900 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:18:46,900 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 22:18:46,900 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 22:18:46,901 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:18:46,901 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 22:18:46,901 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:18:46,901 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 22:18:46,902 - __main__ - INFO - umidade_atual            : 0.9901
+2025-06-20 22:18:46,902 - __main__ - INFO - umidade_variacao         : 0.0066
+2025-06-20 22:18:46,902 - __main__ - INFO - umidade_tendencia        : 0.0025
+2025-06-20 22:18:46,902 - __main__ - INFO - ph_categoria_encoded     : 0.0003
+2025-06-20 22:18:46,903 - __main__ - INFO - ph_atual                 : 0.0002
+2025-06-20 22:18:46,903 - __main__ - INFO - ph_tendencia             : 0.0002
+2025-06-20 22:18:46,903 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:18:46,903 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:18:46,904 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:18:46,904 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:18:46,904 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 22:19:31,781 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 22:19:31,782 - __main__ - INFO - Parâmetros: Namespace(days=90, min_samples=40, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 22:19:31,782 - __main__ - INFO - Inicializando serviços...
+2025-06-20 22:19:31,864 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 22:19:31,865 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 22:19:31,865 - __main__ - INFO - Coletando dados dos últimos 90 dias...
+2025-06-20 22:19:32,061 - app.ml.model_trainer - INFO - Coletados 3148 registros para treinamento
+2025-06-20 22:19:32,062 - __main__ - INFO - Coletados 3148 registros para treinamento
+2025-06-20 22:19:32,062 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 22:19:32,063 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-20 00:26:59 a 2025-06-20 22:06:18
+2025-06-20 22:19:32,754 - app.services.climate_service - INFO - Coletados 768 pontos climáticos históricos
+2025-06-20 22:19:33,079 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 3148 pontos com informações climáticas
+2025-06-20 22:19:33,080 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:19:33,080 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:19:33,099 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 3144 registros limpos
+2025-06-20 22:19:35,829 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 22:19:35,829 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:19:35,830 - app.ml.irrigation_predictor - INFO - MAE Umidade: 0.034
+2025-06-20 22:19:35,830 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 22:19:35,831 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:19:35,831 - __main__ - INFO - MAE Umidade: 0.034
+2025-06-20 22:19:35,831 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 22:19:35,832 - __main__ - INFO - CV Umidade: 0.020 ± 0.032
+2025-06-20 22:19:35,832 - __main__ - INFO - Amostras de Treino: 3144
+2025-06-20 22:19:35,832 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 22:19:35,890 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 22:19:35,891 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 22:19:35,891 - __main__ - INFO - Executando teste de predição...
+2025-06-20 22:19:35,892 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 22:19:35,892 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 22:19:35,918 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 22:19:35,918 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 22:19:35,919 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 22:19:35,919 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 22:19:35,919 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 22:19:35,920 - __main__ - INFO - Analisando importância das features...
+2025-06-20 22:19:35,926 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 22:19:35,927 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 22:19:35,927 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 22:19:35,927 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 22:19:35,928 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:19:35,928 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:19:35,928 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:19:35,929 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 22:19:35,929 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 22:19:35,929 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:19:35,930 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 22:19:35,930 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:19:35,930 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 22:19:35,930 - __main__ - INFO - umidade_atual            : 0.9921
+2025-06-20 22:19:35,931 - __main__ - INFO - umidade_tendencia        : 0.0038
+2025-06-20 22:19:35,931 - __main__ - INFO - umidade_variacao         : 0.0031
+2025-06-20 22:19:35,931 - __main__ - INFO - ph_categoria_encoded     : 0.0004
+2025-06-20 22:19:35,931 - __main__ - INFO - ph_atual                 : 0.0003
+2025-06-20 22:19:35,932 - __main__ - INFO - wind_speed               : 0.0001
+2025-06-20 22:19:35,932 - __main__ - INFO - pressure                 : 0.0001
+2025-06-20 22:19:35,932 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:19:35,932 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:19:35,933 - __main__ - INFO - ph_tendencia             : 0.0000
+2025-06-20 22:19:35,933 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 22:31:12,888 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 22:31:12,888 - __main__ - INFO - Parâmetros: Namespace(days=30, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 22:31:12,889 - __main__ - INFO - Inicializando serviços...
+2025-06-20 22:31:12,975 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 22:31:12,976 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 22:31:12,976 - __main__ - INFO - Coletando dados dos últimos 30 dias...
+2025-06-20 22:31:13,152 - app.ml.model_trainer - INFO - Coletados 2794 registros para treinamento
+2025-06-20 22:31:13,153 - __main__ - INFO - Coletados 2794 registros para treinamento
+2025-06-20 22:31:13,153 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 22:31:13,153 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-21 22:31:59 a 2025-06-20 22:06:18
+2025-06-20 22:31:13,904 - app.services.climate_service - INFO - Coletados 744 pontos climáticos históricos
+2025-06-20 22:31:14,221 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 2794 pontos com informações climáticas
+2025-06-20 22:31:14,222 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:31:14,222 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:31:14,232 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 2790 registros limpos
+2025-06-20 22:31:18,266 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 22:31:18,266 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:31:18,267 - app.ml.irrigation_predictor - INFO - MAE Umidade: 0.033
+2025-06-20 22:31:18,268 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 22:31:18,268 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:31:18,268 - __main__ - INFO - MAE Umidade: 0.033
+2025-06-20 22:31:18,269 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 22:31:18,269 - __main__ - INFO - CV Umidade: 0.274 ± 0.505
+2025-06-20 22:31:18,269 - __main__ - INFO - Amostras de Treino: 2790
+2025-06-20 22:31:18,269 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 22:31:18,356 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 22:31:18,356 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 22:31:18,356 - __main__ - INFO - Executando teste de predição...
+2025-06-20 22:31:18,358 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 22:31:18,358 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 22:31:18,385 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 22:31:18,385 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 22:31:18,386 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 22:31:18,386 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 22:31:18,386 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 22:31:18,387 - __main__ - INFO - Analisando importância das features...
+2025-06-20 22:31:18,393 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 22:31:18,394 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 22:31:18,394 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 22:31:18,395 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 22:31:18,395 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:31:18,395 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:31:18,395 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:31:18,396 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 22:31:18,396 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 22:31:18,396 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:31:18,397 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 22:31:18,397 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:31:18,397 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 22:31:18,398 - __main__ - INFO - umidade_atual            : 0.9997
+2025-06-20 22:31:18,398 - __main__ - INFO - umidade_tendencia        : 0.0000
+2025-06-20 22:31:18,398 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 22:31:18,399 - __main__ - INFO - temp_tendencia           : 0.0000
+2025-06-20 22:31:18,399 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 22:31:18,399 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 22:31:18,400 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:31:18,400 - __main__ - INFO - umidade_variacao         : 0.0000
+2025-06-20 22:31:18,400 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:31:18,401 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:31:18,401 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 22:41:05,382 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 22:41:05,382 - __main__ - INFO - Parâmetros: Namespace(days=30, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 22:41:05,383 - __main__ - INFO - Inicializando serviços...
+2025-06-20 22:41:05,462 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 22:41:05,462 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 22:41:05,462 - __main__ - INFO - Coletando dados dos últimos 30 dias...
+2025-06-20 22:41:05,508 - app.ml.model_trainer - INFO - Coletados 199 registros para treinamento
+2025-06-20 22:41:05,509 - __main__ - INFO - Coletados 199 registros para treinamento
+2025-06-20 22:41:05,509 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 22:41:05,510 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-22 01:40:56 a 2025-06-15 19:40:56
+2025-06-20 22:41:06,210 - app.services.climate_service - INFO - Coletados 600 pontos climáticos históricos
+2025-06-20 22:41:06,227 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 199 pontos com informações climáticas
+2025-06-20 22:41:06,228 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:41:06,228 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:41:06,233 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 199 registros limpos
+2025-06-20 22:41:08,066 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 22:41:08,067 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:41:08,067 - app.ml.irrigation_predictor - INFO - MAE Umidade: 0.785
+2025-06-20 22:41:08,067 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 22:41:08,068 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:41:08,068 - __main__ - INFO - MAE Umidade: 0.785
+2025-06-20 22:41:08,068 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 22:41:08,068 - __main__ - INFO - CV Umidade: 0.516 ± 0.034
+2025-06-20 22:41:08,069 - __main__ - INFO - Amostras de Treino: 199
+2025-06-20 22:41:08,069 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 22:41:08,156 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 22:41:08,156 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 22:41:08,156 - __main__ - INFO - Executando teste de predição...
+2025-06-20 22:41:08,157 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 22:41:08,157 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 22:41:08,188 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 22:41:08,189 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 22:41:08,189 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 22:41:08,190 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 22:41:08,190 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 22:41:08,191 - __main__ - INFO - Analisando importância das features...
+2025-06-20 22:41:08,196 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 22:41:08,197 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 22:41:08,197 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 22:41:08,198 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 22:41:08,198 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:41:08,199 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:41:08,199 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:41:08,199 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 22:41:08,200 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 22:41:08,200 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:41:08,201 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 22:41:08,201 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:41:08,201 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 22:41:08,202 - __main__ - INFO - umidade_atual            : 0.9953
+2025-06-20 22:41:08,202 - __main__ - INFO - umidade_tendencia        : 0.0009
+2025-06-20 22:41:08,203 - __main__ - INFO - pressure                 : 0.0007
+2025-06-20 22:41:08,203 - __main__ - INFO - dia_da_semana            : 0.0005
+2025-06-20 22:41:08,203 - __main__ - INFO - umidade_variacao         : 0.0005
+2025-06-20 22:41:08,204 - __main__ - INFO - ph_tendencia             : 0.0003
+2025-06-20 22:41:08,204 - __main__ - INFO - wind_speed               : 0.0003
+2025-06-20 22:41:08,205 - __main__ - INFO - ph_atual                 : 0.0003
+2025-06-20 22:41:08,205 - __main__ - INFO - precipitacao_acumulada   : 0.0002
+2025-06-20 22:41:08,206 - __main__ - INFO - humidity_air             : 0.0002
+2025-06-20 22:41:08,206 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 22:42:49,735 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 22:42:49,736 - __main__ - INFO - Parâmetros: Namespace(days=30, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 22:42:49,736 - __main__ - INFO - Inicializando serviços...
+2025-06-20 22:42:49,817 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 22:42:49,817 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 22:42:49,817 - __main__ - INFO - Coletando dados dos últimos 30 dias...
+2025-06-20 22:42:49,863 - app.ml.model_trainer - INFO - Coletados 199 registros para treinamento
+2025-06-20 22:42:49,864 - __main__ - INFO - Coletados 199 registros para treinamento
+2025-06-20 22:42:49,864 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 22:42:49,865 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-22 01:40:56 a 2025-06-15 19:40:56
+2025-06-20 22:42:50,535 - app.services.climate_service - INFO - Coletados 600 pontos climáticos históricos
+2025-06-20 22:42:50,549 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 199 pontos com informações climáticas
+2025-06-20 22:42:50,549 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:42:50,549 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:42:50,554 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 199 registros limpos
+2025-06-20 22:42:52,429 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 22:42:52,429 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:42:52,430 - app.ml.irrigation_predictor - INFO - MAE Umidade: 0.785
+2025-06-20 22:42:52,430 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 22:42:52,430 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:42:52,431 - __main__ - INFO - MAE Umidade: 0.785
+2025-06-20 22:42:52,431 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 22:42:52,432 - __main__ - INFO - CV Umidade: 0.516 ± 0.034
+2025-06-20 22:42:52,432 - __main__ - INFO - Amostras de Treino: 199
+2025-06-20 22:42:52,432 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 22:42:52,519 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 22:42:52,520 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 22:42:52,520 - __main__ - INFO - Executando teste de predição...
+2025-06-20 22:42:52,520 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 22:42:52,520 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 22:42:52,544 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 22:42:52,545 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 22:42:52,545 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 22:42:52,546 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 22:42:52,546 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 22:42:52,547 - __main__ - INFO - Analisando importância das features...
+2025-06-20 22:42:52,552 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 22:42:52,553 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 22:42:52,554 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 22:42:52,554 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 22:42:52,554 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:42:52,554 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:42:52,555 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:42:52,555 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 22:42:52,556 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 22:42:52,556 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:42:52,556 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 22:42:52,557 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:42:52,557 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 22:42:52,557 - __main__ - INFO - umidade_atual            : 0.9953
+2025-06-20 22:42:52,558 - __main__ - INFO - umidade_tendencia        : 0.0009
+2025-06-20 22:42:52,558 - __main__ - INFO - pressure                 : 0.0007
+2025-06-20 22:42:52,558 - __main__ - INFO - dia_da_semana            : 0.0005
+2025-06-20 22:42:52,558 - __main__ - INFO - umidade_variacao         : 0.0005
+2025-06-20 22:42:52,559 - __main__ - INFO - ph_tendencia             : 0.0003
+2025-06-20 22:42:52,559 - __main__ - INFO - wind_speed               : 0.0003
+2025-06-20 22:42:52,559 - __main__ - INFO - ph_atual                 : 0.0003
+2025-06-20 22:42:52,559 - __main__ - INFO - precipitacao_acumulada   : 0.0002
+2025-06-20 22:42:52,560 - __main__ - INFO - humidity_air             : 0.0002
+2025-06-20 22:42:52,560 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 22:53:48,437 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 22:53:48,438 - __main__ - INFO - Parâmetros: Namespace(days=30, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 22:53:48,438 - __main__ - INFO - Inicializando serviços...
+2025-06-20 22:53:48,536 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 22:53:48,537 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 22:53:48,537 - __main__ - INFO - Coletando dados dos últimos 30 dias...
+2025-06-20 22:53:48,585 - app.ml.model_trainer - INFO - Coletados 199 registros para treinamento
+2025-06-20 22:53:48,586 - __main__ - INFO - Coletados 199 registros para treinamento
+2025-06-20 22:53:48,586 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 22:53:48,587 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-22 01:53:28 a 2025-06-15 19:53:28
+2025-06-20 22:53:49,291 - app.services.climate_service - INFO - Coletados 600 pontos climáticos históricos
+2025-06-20 22:53:49,312 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 199 pontos com informações climáticas
+2025-06-20 22:53:49,313 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:53:49,314 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 22:53:49,319 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 199 registros limpos
+2025-06-20 22:53:50,103 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 22:53:50,103 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:53:50,104 - app.ml.irrigation_predictor - INFO - MAE Umidade: 6.665
+2025-06-20 22:53:50,104 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 22:53:50,104 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 22:53:50,104 - __main__ - INFO - MAE Umidade: 6.665
+2025-06-20 22:53:50,104 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 22:53:50,105 - __main__ - INFO - CV Umidade: 6.594 ± 0.858
+2025-06-20 22:53:50,105 - __main__ - INFO - Amostras de Treino: 199
+2025-06-20 22:53:50,106 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 22:53:50,145 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 22:53:50,145 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 22:53:50,145 - __main__ - INFO - Executando teste de predição...
+2025-06-20 22:53:50,146 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 22:53:50,146 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 22:53:50,171 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 22:53:50,172 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 22:53:50,172 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 22:53:50,173 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 22:53:50,174 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 22:53:50,174 - __main__ - INFO - Analisando importância das features...
+2025-06-20 22:53:50,177 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 22:53:50,178 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 22:53:50,178 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 22:53:50,178 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 22:53:50,179 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 22:53:50,179 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 22:53:50,180 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 22:53:50,180 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 22:53:50,180 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 22:53:50,181 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 22:53:50,181 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 22:53:50,181 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 22:53:50,182 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 22:53:50,182 - __main__ - INFO - umidade_atual            : 0.3703
+2025-06-20 22:53:50,182 - __main__ - INFO - umidade_tendencia        : 0.2097
+2025-06-20 22:53:50,183 - __main__ - INFO - hora_do_dia              : 0.1279
+2025-06-20 22:53:50,183 - __main__ - INFO - temp_tendencia           : 0.0474
+2025-06-20 22:53:50,183 - __main__ - INFO - humidity_air             : 0.0472
+2025-06-20 22:53:50,184 - __main__ - INFO - periodo_dia_encoded      : 0.0373
+2025-06-20 22:53:50,184 - __main__ - INFO - umidade_variacao         : 0.0335
+2025-06-20 22:53:50,185 - __main__ - INFO - ph_atual                 : 0.0220
+2025-06-20 22:53:50,185 - __main__ - INFO - temperature              : 0.0206
+2025-06-20 22:53:50,185 - __main__ - INFO - ph_tendencia             : 0.0201
+2025-06-20 22:53:50,186 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 23:04:30,652 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 23:04:30,653 - __main__ - INFO - Parâmetros: Namespace(days=30, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 23:04:30,653 - __main__ - INFO - Inicializando serviços...
+2025-06-20 23:04:30,736 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 23:04:30,737 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 23:04:30,737 - __main__ - INFO - Coletando dados dos últimos 30 dias...
+2025-06-20 23:04:30,786 - app.ml.model_trainer - INFO - Coletados 225 registros para treinamento
+2025-06-20 23:04:30,786 - __main__ - INFO - Coletados 225 registros para treinamento
+2025-06-20 23:04:30,786 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 23:04:30,787 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-05-26 23:04:17 a 2025-06-14 01:04:17
+2025-06-20 23:04:31,486 - app.services.climate_service - INFO - Coletados 480 pontos climáticos históricos
+2025-06-20 23:04:31,499 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 225 pontos com informações climáticas
+2025-06-20 23:04:31,500 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:04:31,500 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:04:31,505 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 225 registros limpos
+2025-06-20 23:04:32,176 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 23:04:32,176 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 1.000
+2025-06-20 23:04:32,177 - app.ml.irrigation_predictor - INFO - MAE Umidade: 8.156
+2025-06-20 23:04:32,177 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 23:04:32,178 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 23:04:32,178 - __main__ - INFO - MAE Umidade: 8.156
+2025-06-20 23:04:32,178 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 23:04:32,179 - __main__ - INFO - CV Umidade: 8.239 ± 2.789
+2025-06-20 23:04:32,179 - __main__ - INFO - Amostras de Treino: 225
+2025-06-20 23:04:32,180 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 23:04:32,214 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 23:04:32,214 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 23:04:32,214 - __main__ - INFO - Executando teste de predição...
+2025-06-20 23:04:32,215 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 23:04:32,215 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 23:04:32,234 - app.ml.irrigation_predictor - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 23:04:32,235 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 23:04:32,236 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 23:04:32,236 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 23:04:32,236 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 23:04:32,237 - __main__ - INFO - Analisando importância das features...
+2025-06-20 23:04:32,239 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 23:04:32,239 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 23:04:32,240 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 23:04:32,240 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 23:04:32,240 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 23:04:32,241 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 23:04:32,241 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 23:04:32,241 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 23:04:32,241 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 23:04:32,242 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 23:04:32,242 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 23:04:32,242 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 23:04:32,242 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 23:04:32,243 - __main__ - INFO - umidade_atual            : 0.4401
+2025-06-20 23:04:32,243 - __main__ - INFO - umidade_tendencia        : 0.2290
+2025-06-20 23:04:32,244 - __main__ - INFO - umidade_variacao         : 0.0485
+2025-06-20 23:04:32,244 - __main__ - INFO - pressure                 : 0.0325
+2025-06-20 23:04:32,245 - __main__ - INFO - temp_tendencia           : 0.0292
+2025-06-20 23:04:32,245 - __main__ - INFO - dia_da_semana            : 0.0291
+2025-06-20 23:04:32,245 - __main__ - INFO - ph_tendencia             : 0.0288
+2025-06-20 23:04:32,245 - __main__ - INFO - estacao_encoded          : 0.0280
+2025-06-20 23:04:32,246 - __main__ - INFO - ph_atual                 : 0.0276
+2025-06-20 23:04:32,246 - __main__ - INFO - mes_ano                  : 0.0228
+2025-06-20 23:04:32,246 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 23:10:37,991 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 23:10:37,992 - __main__ - INFO - Parâmetros: Namespace(days=60, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 23:10:37,992 - __main__ - INFO - Inicializando serviços...
+2025-06-20 23:10:38,071 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 23:10:38,072 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 23:10:38,072 - __main__ - INFO - Coletando dados dos últimos 60 dias...
+2025-06-20 23:10:38,142 - app.ml.model_trainer - INFO - Coletados 729 registros para treinamento
+2025-06-20 23:10:38,143 - __main__ - INFO - Coletados 729 registros para treinamento
+2025-06-20 23:10:38,143 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 23:10:38,144 - app.ml.irrigation_predictor - INFO - Buscando dados climáticos de 2025-04-21 23:34:17 a 2025-06-14 01:04:17
+2025-06-20 23:10:39,040 - app.services.climate_service - INFO - Coletados 1320 pontos climáticos históricos
+2025-06-20 23:10:39,196 - app.ml.irrigation_predictor - INFO - Dados enriquecidos: 729 pontos com informações climáticas
+2025-06-20 23:10:39,197 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:10:39,197 - app.ml.irrigation_predictor - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:10:39,202 - app.ml.irrigation_predictor - INFO - Dados preprocessados: 729 registros limpos
+2025-06-20 23:10:39,214 - app.ml.irrigation_predictor - INFO - Classes encontradas: [0]
+2025-06-20 23:10:39,215 - app.ml.irrigation_predictor - INFO - Distribuição: {0: 729}
+2025-06-20 23:10:39,311 - app.ml.irrigation_predictor - INFO - Após balanceamento - Classes: [0 1]
+2025-06-20 23:10:39,311 - app.ml.irrigation_predictor - INFO - Após balanceamento - Distribuição: {0: 517, 1: 212}
+2025-06-20 23:10:39,416 - app.ml.irrigation_predictor - INFO - Classes preditas pelo modelo: [0 1]
+2025-06-20 23:10:40,235 - app.ml.irrigation_predictor - INFO - Modelos treinados com sucesso!
+2025-06-20 23:10:40,236 - app.ml.irrigation_predictor - INFO - Acurácia Irrigação: 0.858
+2025-06-20 23:10:40,236 - app.ml.irrigation_predictor - INFO - MAE Umidade: 10.278
+2025-06-20 23:10:40,237 - app.ml.irrigation_predictor - INFO - Classes no modelo: 2
+2025-06-20 23:10:40,237 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 23:10:40,238 - __main__ - INFO - Acurácia Irrigação: 0.858
+2025-06-20 23:10:40,238 - __main__ - INFO - MAE Umidade: 10.278
+2025-06-20 23:10:40,239 - __main__ - INFO - CV Irrigação: 0.834 ± 0.072
+2025-06-20 23:10:40,239 - __main__ - INFO - CV Umidade: 12.237 ± 3.669
+2025-06-20 23:10:40,239 - __main__ - INFO - Amostras de Treino: 729
+2025-06-20 23:10:40,240 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 23:10:40,286 - app.ml.irrigation_predictor - INFO - Modelos salvos em models/farmtech
+2025-06-20 23:10:40,286 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 23:10:40,287 - __main__ - INFO - Executando teste de predição...
+2025-06-20 23:10:40,287 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 23:10:40,287 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 23:10:40,310 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 23:10:40,310 - __main__ - INFO - Probabilidade: 41.9%
+2025-06-20 23:10:40,311 - __main__ - INFO - Confiança: 58.1%
+2025-06-20 23:10:40,311 - __main__ - INFO - Umidade Prevista: 23.5%
+2025-06-20 23:10:40,311 - __main__ - INFO - Recomendações:
+2025-06-20 23:10:40,314 - __main__ - INFO - 
+--- Solo Úmido + pH Ácido ---
+2025-06-20 23:10:40,347 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 23:10:40,347 - __main__ - INFO - Probabilidade: 13.4%
+2025-06-20 23:10:40,347 - __main__ - INFO - Confiança: 86.6%
+2025-06-20 23:10:40,348 - __main__ - INFO - Umidade Prevista: 65.8%
+2025-06-20 23:10:40,348 - __main__ - INFO - Recomendações:
+2025-06-20 23:10:40,356 - __main__ - INFO - 
+--- Condições Normais ---
+2025-06-20 23:10:40,379 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 23:10:40,380 - __main__ - INFO - Probabilidade: 25.0%
+2025-06-20 23:10:40,380 - __main__ - INFO - Confiança: 75.0%
+2025-06-20 23:10:40,381 - __main__ - INFO - Umidade Prevista: 36.0%
+2025-06-20 23:10:40,381 - __main__ - INFO - Recomendações:
+2025-06-20 23:10:40,387 - __main__ - INFO - Analisando importância das features...
+2025-06-20 23:10:40,398 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 23:10:40,399 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 23:10:40,399 - __main__ - INFO - umidade_atual            : 0.4345
+2025-06-20 23:10:40,399 - __main__ - INFO - ph_atual                 : 0.1280
+2025-06-20 23:10:40,400 - __main__ - INFO - umidade_tendencia        : 0.0709
+2025-06-20 23:10:40,400 - __main__ - INFO - ph_categoria_encoded     : 0.0631
+2025-06-20 23:10:40,401 - __main__ - INFO - umidade_variacao         : 0.0445
+2025-06-20 23:10:40,401 - __main__ - INFO - pressure                 : 0.0434
+2025-06-20 23:10:40,402 - __main__ - INFO - ph_tendencia             : 0.0420
+2025-06-20 23:10:40,402 - __main__ - INFO - wind_speed               : 0.0329
+2025-06-20 23:10:40,403 - __main__ - INFO - temperature              : 0.0312
+2025-06-20 23:10:40,404 - __main__ - INFO - temp_tendencia           : 0.0267
+2025-06-20 23:10:40,404 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 23:10:40,405 - __main__ - INFO - umidade_tendencia        : 0.4158
+2025-06-20 23:10:40,406 - __main__ - INFO - umidade_atual            : 0.2990
+2025-06-20 23:10:40,406 - __main__ - INFO - wind_speed               : 0.0641
+2025-06-20 23:10:40,406 - __main__ - INFO - pressure                 : 0.0352
+2025-06-20 23:10:40,407 - __main__ - INFO - temp_tendencia           : 0.0331
+2025-06-20 23:10:40,407 - __main__ - INFO - temperature              : 0.0308
+2025-06-20 23:10:40,408 - __main__ - INFO - ph_tendencia             : 0.0269
+2025-06-20 23:10:40,408 - __main__ - INFO - dia_da_semana            : 0.0170
+2025-06-20 23:10:40,408 - __main__ - INFO - ph_atual                 : 0.0142
+2025-06-20 23:10:40,409 - __main__ - INFO - humidity_air             : 0.0138
+2025-06-20 23:10:40,409 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 23:11:09,599 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 23:11:09,600 - __main__ - INFO - Parâmetros: Namespace(days=60, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 23:11:09,600 - __main__ - INFO - Inicializando serviços...
+2025-06-20 23:11:09,681 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 23:11:09,681 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 23:11:09,682 - __main__ - INFO - Coletando dados dos últimos 60 dias...
+2025-06-20 23:11:09,748 - app.ml.model_trainer - INFO - Coletados 729 registros para treinamento
+2025-06-20 23:11:09,748 - __main__ - INFO - Coletados 729 registros para treinamento
+2025-06-20 23:11:09,748 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 23:11:09,749 - app.ml.irrigation_predictor_old - INFO - Buscando dados climáticos de 2025-04-21 23:34:17 a 2025-06-14 01:04:17
+2025-06-20 23:11:10,487 - app.services.climate_service - INFO - Coletados 1320 pontos climáticos históricos
+2025-06-20 23:11:10,648 - app.ml.irrigation_predictor_old - INFO - Dados enriquecidos: 729 pontos com informações climáticas
+2025-06-20 23:11:10,649 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:11:10,650 - app.ml.irrigation_predictor_old - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:11:10,656 - app.ml.irrigation_predictor_old - INFO - Dados preprocessados: 729 registros limpos
+2025-06-20 23:11:11,418 - app.ml.irrigation_predictor_old - INFO - Modelos treinados com sucesso!
+2025-06-20 23:11:11,419 - app.ml.irrigation_predictor_old - INFO - Acurácia Irrigação: 1.000
+2025-06-20 23:11:11,419 - app.ml.irrigation_predictor_old - INFO - MAE Umidade: 6.702
+2025-06-20 23:11:11,420 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 23:11:11,420 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 23:11:11,421 - __main__ - INFO - MAE Umidade: 6.702
+2025-06-20 23:11:11,421 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 23:11:11,421 - __main__ - INFO - CV Umidade: 8.962 ± 2.919
+2025-06-20 23:11:11,422 - __main__ - INFO - Amostras de Treino: 729
+2025-06-20 23:11:11,422 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 23:11:11,459 - app.ml.irrigation_predictor_old - INFO - Modelos salvos em models/farmtech
+2025-06-20 23:11:11,459 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 23:11:11,460 - __main__ - INFO - Executando teste de predição...
+2025-06-20 23:11:11,460 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 23:11:11,460 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 23:11:11,480 - app.ml.irrigation_predictor_old - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 23:11:11,480 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 23:11:11,481 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 23:11:11,481 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 23:11:11,481 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 23:11:11,481 - __main__ - INFO - Analisando importância das features...
+2025-06-20 23:11:11,484 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 23:11:11,485 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 23:11:11,485 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 23:11:11,485 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 23:11:11,486 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 23:11:11,486 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 23:11:11,486 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 23:11:11,487 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 23:11:11,487 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 23:11:11,488 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 23:11:11,488 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 23:11:11,488 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 23:11:11,489 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 23:11:11,489 - __main__ - INFO - umidade_atual            : 0.4247
+2025-06-20 23:11:11,490 - __main__ - INFO - umidade_tendencia        : 0.3047
+2025-06-20 23:11:11,490 - __main__ - INFO - wind_speed               : 0.0516
+2025-06-20 23:11:11,490 - __main__ - INFO - temp_tendencia           : 0.0438
+2025-06-20 23:11:11,491 - __main__ - INFO - pressure                 : 0.0382
+2025-06-20 23:11:11,491 - __main__ - INFO - dia_da_semana            : 0.0248
+2025-06-20 23:11:11,493 - __main__ - INFO - temperature              : 0.0220
+2025-06-20 23:11:11,493 - __main__ - INFO - humidity_air             : 0.0210
+2025-06-20 23:11:11,493 - __main__ - INFO - umidade_variacao         : 0.0149
+2025-06-20 23:11:11,493 - __main__ - INFO - ph_tendencia             : 0.0140
+2025-06-20 23:11:11,494 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 23:13:32,412 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 23:13:32,412 - __main__ - INFO - Parâmetros: Namespace(days=60, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 23:13:32,413 - __main__ - INFO - Inicializando serviços...
+2025-06-20 23:13:32,493 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 23:13:32,494 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 23:13:32,494 - __main__ - INFO - Coletando dados dos últimos 60 dias...
+2025-06-20 23:13:32,564 - app.ml.model_trainer - INFO - Coletados 725 registros para treinamento
+2025-06-20 23:13:32,565 - __main__ - INFO - Coletados 725 registros para treinamento
+2025-06-20 23:13:32,565 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 23:13:32,565 - app.ml.irrigation_predictor_old - INFO - Buscando dados climáticos de 2025-04-21 23:43:22 a 2025-06-14 01:13:22
+2025-06-20 23:13:33,300 - app.services.climate_service - INFO - Coletados 1320 pontos climáticos históricos
+2025-06-20 23:13:33,418 - app.ml.irrigation_predictor_old - INFO - Dados enriquecidos: 725 pontos com informações climáticas
+2025-06-20 23:13:33,419 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:13:33,419 - app.ml.irrigation_predictor_old - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:13:33,425 - app.ml.irrigation_predictor_old - INFO - Dados preprocessados: 725 registros limpos
+2025-06-20 23:13:34,188 - app.ml.irrigation_predictor_old - INFO - Modelos treinados com sucesso!
+2025-06-20 23:13:34,188 - app.ml.irrigation_predictor_old - INFO - Acurácia Irrigação: 1.000
+2025-06-20 23:13:34,189 - app.ml.irrigation_predictor_old - INFO - MAE Umidade: 6.608
+2025-06-20 23:13:34,189 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 23:13:34,190 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 23:13:34,190 - __main__ - INFO - MAE Umidade: 6.608
+2025-06-20 23:13:34,190 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 23:13:34,190 - __main__ - INFO - CV Umidade: 8.776 ± 2.855
+2025-06-20 23:13:34,190 - __main__ - INFO - Amostras de Treino: 725
+2025-06-20 23:13:34,192 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 23:13:34,229 - app.ml.irrigation_predictor_old - INFO - Modelos salvos em models/farmtech
+2025-06-20 23:13:34,230 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 23:13:34,230 - __main__ - INFO - Executando teste de predição...
+2025-06-20 23:13:34,230 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 23:13:34,231 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 23:13:34,253 - app.ml.irrigation_predictor_old - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 23:13:34,254 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 23:13:34,254 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 23:13:34,254 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 23:13:34,255 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 23:13:34,255 - __main__ - INFO - Analisando importância das features...
+2025-06-20 23:13:34,258 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 23:13:34,258 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 23:13:34,259 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 23:13:34,259 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 23:13:34,259 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 23:13:34,260 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 23:13:34,260 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 23:13:34,260 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 23:13:34,261 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 23:13:34,261 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 23:13:34,261 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 23:13:34,261 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 23:13:34,262 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 23:13:34,263 - __main__ - INFO - umidade_atual            : 0.4107
+2025-06-20 23:13:34,263 - __main__ - INFO - umidade_tendencia        : 0.3096
+2025-06-20 23:13:34,263 - __main__ - INFO - wind_speed               : 0.0472
+2025-06-20 23:13:34,264 - __main__ - INFO - temperature              : 0.0438
+2025-06-20 23:13:34,264 - __main__ - INFO - pressure                 : 0.0422
+2025-06-20 23:13:34,264 - __main__ - INFO - temp_tendencia           : 0.0328
+2025-06-20 23:13:34,264 - __main__ - INFO - mes_ano                  : 0.0190
+2025-06-20 23:13:34,265 - __main__ - INFO - dia_da_semana            : 0.0184
+2025-06-20 23:13:34,265 - __main__ - INFO - umidade_variacao         : 0.0169
+2025-06-20 23:13:34,265 - __main__ - INFO - ph_tendencia             : 0.0161
+2025-06-20 23:13:34,265 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
+2025-06-20 23:18:22,228 - __main__ - INFO - === FarmTech Solutions - FASE 4: Treinamento ML ===
+2025-06-20 23:18:22,229 - __main__ - INFO - Parâmetros: Namespace(days=60, min_samples=20, location='-23.5505,-46.6333', save_models=True, evaluate_only=False)
+2025-06-20 23:18:22,229 - __main__ - INFO - Inicializando serviços...
+2025-06-20 23:18:22,315 - __main__ - INFO - Localização: -23.5505, -46.6333
+2025-06-20 23:18:22,315 - __main__ - INFO - Iniciando processo de treinamento completo...
+2025-06-20 23:18:22,316 - __main__ - INFO - Coletando dados dos últimos 60 dias...
+2025-06-20 23:18:22,361 - app.ml.model_trainer - INFO - Coletados 100 registros para treinamento
+2025-06-20 23:18:22,361 - __main__ - INFO - Coletados 100 registros para treinamento
+2025-06-20 23:18:22,363 - __main__ - INFO - Enriquecendo dados com informações climáticas...
+2025-06-20 23:18:22,363 - app.ml.irrigation_predictor_old - INFO - Buscando dados climáticos de 2025-05-21 23:15:49 a 2025-06-15 17:15:49
+2025-06-20 23:18:23,186 - app.services.climate_service - INFO - Coletados 624 pontos climáticos históricos
+2025-06-20 23:18:23,193 - app.ml.irrigation_predictor_old - INFO - Dados enriquecidos: 100 pontos com informações climáticas
+2025-06-20 23:18:23,194 - __main__ - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:18:23,195 - app.ml.irrigation_predictor_old - INFO - Iniciando treinamento dos modelos ML...
+2025-06-20 23:18:23,200 - app.ml.irrigation_predictor_old - INFO - Dados preprocessados: 100 registros limpos
+2025-06-20 23:18:23,856 - app.ml.irrigation_predictor_old - INFO - Modelos treinados com sucesso!
+2025-06-20 23:18:23,857 - app.ml.irrigation_predictor_old - INFO - Acurácia Irrigação: 1.000
+2025-06-20 23:18:23,857 - app.ml.irrigation_predictor_old - INFO - MAE Umidade: 5.289
+2025-06-20 23:18:23,858 - __main__ - INFO - === RESULTADOS DO TREINAMENTO ===
+2025-06-20 23:18:23,858 - __main__ - INFO - Acurácia Irrigação: 1.000
+2025-06-20 23:18:23,858 - __main__ - INFO - MAE Umidade: 5.289
+2025-06-20 23:18:23,858 - __main__ - INFO - CV Irrigação: 1.000 ± 0.000
+2025-06-20 23:18:23,859 - __main__ - INFO - CV Umidade: 5.766 ± 0.740
+2025-06-20 23:18:23,859 - __main__ - INFO - Amostras de Treino: 100
+2025-06-20 23:18:23,859 - __main__ - INFO - Salvando modelos treinados...
+2025-06-20 23:18:23,893 - app.ml.irrigation_predictor_old - INFO - Modelos salvos em models/farmtech
+2025-06-20 23:18:23,894 - __main__ - INFO - Modelos salvos com sucesso!
+2025-06-20 23:18:23,894 - __main__ - INFO - Executando teste de predição...
+2025-06-20 23:18:23,894 - __main__ - INFO - === TESTES DE PREDIÇÃO ===
+2025-06-20 23:18:23,895 - __main__ - INFO - 
+--- Solo Seco + pH Ideal ---
+2025-06-20 23:18:23,912 - app.ml.irrigation_predictor_old - ERROR - Erro na predição: index 1 is out of bounds for axis 0 with size 1
+2025-06-20 23:18:23,913 - __main__ - INFO - Irrigação Necessária: NÃO
+2025-06-20 23:18:23,914 - __main__ - INFO - Probabilidade: 0.0%
+2025-06-20 23:18:23,915 - __main__ - INFO - Confiança: 0.0%
+2025-06-20 23:18:23,915 - __main__ - ERROR - Erro no teste de predição: 'predicted_humidity_next_hour'
+2025-06-20 23:18:23,916 - __main__ - INFO - Analisando importância das features...
+2025-06-20 23:18:23,918 - __main__ - INFO - === IMPORTÂNCIA DAS FEATURES ===
+2025-06-20 23:18:23,919 - __main__ - INFO - 
+--- Modelo de Irrigação ---
+2025-06-20 23:18:23,919 - __main__ - INFO - umidade_atual            : 0.0000
+2025-06-20 23:18:23,919 - __main__ - INFO - ph_atual                 : 0.0000
+2025-06-20 23:18:23,920 - __main__ - INFO - fosforo                  : 0.0000
+2025-06-20 23:18:23,920 - __main__ - INFO - potassio                 : 0.0000
+2025-06-20 23:18:23,921 - __main__ - INFO - temperature              : 0.0000
+2025-06-20 23:18:23,921 - __main__ - INFO - humidity_air             : 0.0000
+2025-06-20 23:18:23,921 - __main__ - INFO - precipitation            : 0.0000
+2025-06-20 23:18:23,922 - __main__ - INFO - wind_speed               : 0.0000
+2025-06-20 23:18:23,922 - __main__ - INFO - pressure                 : 0.0000
+2025-06-20 23:18:23,922 - __main__ - INFO - hora_do_dia              : 0.0000
+2025-06-20 23:18:23,922 - __main__ - INFO - 
+--- Modelo de Umidade ---
+2025-06-20 23:18:23,923 - __main__ - INFO - ph_categoria_encoded     : 0.3243
+2025-06-20 23:18:23,923 - __main__ - INFO - umidade_atual            : 0.2779
+2025-06-20 23:18:23,923 - __main__ - INFO - umidade_tendencia        : 0.1955
+2025-06-20 23:18:23,924 - __main__ - INFO - hora_do_dia              : 0.0467
+2025-06-20 23:18:23,924 - __main__ - INFO - periodo_dia_encoded      : 0.0392
+2025-06-20 23:18:23,924 - __main__ - INFO - ph_atual                 : 0.0380
+2025-06-20 23:18:23,924 - __main__ - INFO - pressure                 : 0.0188
+2025-06-20 23:18:23,925 - __main__ - INFO - humidity_air             : 0.0151
+2025-06-20 23:18:23,925 - __main__ - INFO - wind_speed               : 0.0143
+2025-06-20 23:18:23,925 - __main__ - INFO - ph_tendencia             : 0.0097
+2025-06-20 23:18:23,926 - __main__ - INFO - === TREINAMENTO CONCLUÍDO COM SUCESSO ===
