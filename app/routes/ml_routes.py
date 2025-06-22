@@ -9,11 +9,11 @@ from datetime import datetime
 import logging
 
 from app.services.sql_db_service import SQLDatabaseService
-from app.ml.irrigation_predictor_old import IrrigationPredictor
+from app.ml.irrigation_predictor import IrrigationPredictor
 from app.ml.model_trainer import ModelTrainer
 from app.services.climate_service import ClimateDataService
 
-ml_bp = Blueprint('ml', __name__, url_prefix='/api/ml')
+ml_bp = Blueprint('ml', __name__)
 logger = logging.getLogger(__name__)
 
 @ml_bp.route('/train', methods=['POST'])

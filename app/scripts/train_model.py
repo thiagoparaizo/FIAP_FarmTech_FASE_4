@@ -18,13 +18,18 @@ import argparse
 import logging
 from datetime import datetime
 
+import sys
+if sys.platform == "win32":
+    import os
+    os.environ['PYTHONIOENCODING'] = 'utf-8'
+
 # Configuração de path
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, BASE_DIR)
 
 from config import Config
 from app.services.sql_db_service import SQLDatabaseService
-from app.ml.irrigation_predictor_old import IrrigationPredictor
+from app.ml.irrigation_predictor import IrrigationPredictor
 from app.ml.model_trainer import ModelTrainer
 from app.services.climate_service import ClimateDataService
 

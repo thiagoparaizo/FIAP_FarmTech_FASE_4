@@ -4,7 +4,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from app.ml.irrigation_predictor_old import IrrigationPredictor
+from app.ml.irrigation_predictor import IrrigationPredictor
 from app.services.sql_db_service import SQLDatabaseService
 from datetime import datetime, timedelta
 import logging

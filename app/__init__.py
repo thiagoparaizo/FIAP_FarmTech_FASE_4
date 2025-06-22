@@ -7,6 +7,7 @@ from app.services.oracle_db_service import OracleDatabaseService
 from app.services.sql_db_service import SQLDatabaseService
 from app.routes.web_routes import web_bp
 from app.routes.api_routes import api_bp
+from app.routes.ml_routes import ml_bp
 from app.routes.catalogo_routes import catalogo_bp
 from app.routes.sensor_routes import sensor_bp  # Nova rota para sensores
 from app.utils.filters import configure_template_filters
@@ -54,6 +55,9 @@ def create_app(config_object='config.Config'):
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(sensor_bp, url_prefix='/sensores')
     app.register_blueprint(catalogo_bp, url_prefix='/catalogo')
+    app.register_blueprint(ml_bp, url_prefix='/api/ml')
+    
+    
     
     # Configurar filtros de template
     configure_template_filters(app)

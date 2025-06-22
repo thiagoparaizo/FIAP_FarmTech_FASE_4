@@ -20,7 +20,7 @@ sys.path.insert(0, BASE_DIR)
 
 from config import Config
 from app.services.sql_db_service import SQLDatabaseService
-from app.ml.irrigation_predictor_old import IrrigationPredictor
+from app.ml.irrigation_predictor import IrrigationPredictor
 from app.ml.model_trainer import ModelTrainer
 from app.services.climate_service import ClimateDataService
 
@@ -782,140 +782,140 @@ if __name__ == "__main__":
     main()
     
     
-### ------VERSÃO SIMPLIFICADA
+# ### ------VERSÃO SIMPLIFICADA
 
-"""
-Dashboard Streamlit SIMPLIFICADO - para compatibilidade com implementação anterior
-Este arquivo mantém funcionalidade básica enquanto o dashboard_ml.py oferece funcionalidades avançadas
-"""
+# """
+# Dashboard Streamlit SIMPLIFICADO - para compatibilidade com implementação anterior
+# Este arquivo mantém funcionalidade básica enquanto o dashboard_ml.py oferece funcionalidades avançadas
+# """
 
-import sys
-import os
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
+# import sys
+# import os
+# import streamlit as st
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# from datetime import datetime, timedelta
 
-# Configuração de path
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-sys.path.insert(0, BASE_DIR)
+# # Configuração de path
+# BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+# sys.path.insert(0, BASE_DIR)
 
-from config import Config
-from app.services.sql_db_service import SQLDatabaseService
+# from config import Config
+# from app.services.sql_db_service import SQLDatabaseService
 
-# Configuração da página
-st.set_page_config(
-    page_title="FarmTech Solutions - Dashboard Básico",
-    page_icon="🌱",
-    layout="wide"
-)
+# # Configuração da página
+# st.set_page_config(
+#     page_title="FarmTech Solutions - Dashboard Básico",
+#     page_icon="🌱",
+#     layout="wide"
+# )
 
-# Título
-st.title("🌱 FarmTech Solutions - Dashboard Básico")
-st.markdown("*Use dashboard_ml.py para funcionalidades avançadas de IA*")
+# # Título
+# st.title("🌱 FarmTech Solutions - Dashboard Básico")
+# st.markdown("*Use dashboard_ml.py para funcionalidades avançadas de IA*")
 
-# Conexão com o banco de dados
-@st.cache_resource
-def get_sql_db():
-    return SQLDatabaseService(Config.SQL_DATABASE_URI)
+# # Conexão com o banco de dados
+# @st.cache_resource
+# def get_sql_db():
+#     return SQLDatabaseService(Config.SQL_DATABASE_URI)
 
-sql_db = get_sql_db()
+# sql_db = get_sql_db()
 
-# Obter lista de sensores
-def obter_sensores():
-    session = sql_db.get_session()
-    try:
-        from app.models.sensor_models import Sensor
-        sensores = session.query(Sensor).filter_by(ativo=True).all()
-        return [(s.id, f"{s.tipo} - ID: {s.id}") for s in sensores]
-    finally:
-        session.close()
+# # Obter lista de sensores
+# def obter_sensores():
+#     session = sql_db.get_session()
+#     try:
+#         from app.models.sensor_models import Sensor
+#         sensores = session.query(Sensor).filter_by(ativo=True).all()
+#         return [(s.id, f"{s.tipo} - ID: {s.id}") for s in sensores]
+#     finally:
+#         session.close()
 
-# Interface básica
-sensores = obter_sensores()
-if not sensores:
-    st.error("Nenhum sensor ativo encontrado no sistema.")
-    st.stop()
+# # Interface básica
+# sensores = obter_sensores()
+# if not sensores:
+#     st.error("Nenhum sensor ativo encontrado no sistema.")
+#     st.stop()
 
-sensor_id = st.selectbox(
-    "Selecione o Sensor",
-    options=[s[0] for s in sensores],
-    format_func=lambda x: next((s[1] for s in sensores if s[0] == x), x)
-)
+# sensor_id = st.selectbox(
+#     "Selecione o Sensor",
+#     options=[s[0] for s in sensores],
+#     format_func=lambda x: next((s[1] for s in sensores if s[0] == x), x)
+# )
 
-periodo = st.slider("Período (dias)", min_value=1, max_value=90, value=30)
+# periodo = st.slider("Período (dias)", min_value=1, max_value=90, value=30)
 
-# Botão para dashboard avançado
-st.info("💡 **Para análises de IA e ML, use:** `streamlit run dashboard_ml.py`")
+# # Botão para dashboard avançado
+# st.info("💡 **Para análises de IA e ML, use:** `streamlit run dashboard_ml.py`")
 
-# Dados básicos
-data_fim = datetime.now()
-data_inicio = data_fim - timedelta(days=periodo)
+# # Dados básicos
+# data_fim = datetime.now()
+# data_inicio = data_fim - timedelta(days=periodo)
 
-leituras = sql_db.obter_leituras_por_sensor(sensor_id, data_inicio, data_fim, limite=1000)
+# leituras = sql_db.obter_leituras_por_sensor(sensor_id, data_inicio, data_fim, limite=1000)
 
-if leituras:
-    # Separar por tipo
-    dados_umidade = []
-    dados_ph = []
+# if leituras:
+#     # Separar por tipo
+#     dados_umidade = []
+#     dados_ph = []
     
-    for leitura in leituras:
-        if leitura.unidade == '%':
-            dados_umidade.append({
-                'data_hora': leitura.data_hora,
-                'valor': float(leitura.valor)
-            })
-        elif leitura.unidade == 'pH':
-            dados_ph.append({
-                'data_hora': leitura.data_hora,
-                'valor': float(leitura.valor)
-            })
+#     for leitura in leituras:
+#         if leitura.unidade == '%':
+#             dados_umidade.append({
+#                 'data_hora': leitura.data_hora,
+#                 'valor': float(leitura.valor)
+#             })
+#         elif leitura.unidade == 'pH':
+#             dados_ph.append({
+#                 'data_hora': leitura.data_hora,
+#                 'valor': float(leitura.valor)
+#             })
     
-    # Gráficos básicos
-    col1, col2 = st.columns(2)
+#     # Gráficos básicos
+#     col1, col2 = st.columns(2)
     
-    with col1:
-        if dados_umidade:
-            df_umidade = pd.DataFrame(dados_umidade)
-            st.subheader("💧 Umidade do Solo")
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.plot(df_umidade['data_hora'], df_umidade['valor'], 'b-')
-            ax.set_xlabel('Data/Hora')
-            ax.set_ylabel('Umidade (%)')
-            ax.grid(True)
-            ax.set_ylim(0, 100)
-            plt.xticks(rotation=45)
-            plt.tight_layout()
-            st.pyplot(fig)
+#     with col1:
+#         if dados_umidade:
+#             df_umidade = pd.DataFrame(dados_umidade)
+#             st.subheader("💧 Umidade do Solo")
+#             fig, ax = plt.subplots(figsize=(10, 6))
+#             ax.plot(df_umidade['data_hora'], df_umidade['valor'], 'b-')
+#             ax.set_xlabel('Data/Hora')
+#             ax.set_ylabel('Umidade (%)')
+#             ax.grid(True)
+#             ax.set_ylim(0, 100)
+#             plt.xticks(rotation=45)
+#             plt.tight_layout()
+#             st.pyplot(fig)
             
-            # Estatísticas
-            media = df_umidade['valor'].mean()
-            st.metric("Umidade Média", f"{media:.1f}%")
+#             # Estatísticas
+#             media = df_umidade['valor'].mean()
+#             st.metric("Umidade Média", f"{media:.1f}%")
     
-    with col2:
-        if dados_ph:
-            df_ph = pd.DataFrame(dados_ph)
-            st.subheader("🧪 pH do Solo")
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.plot(df_ph['data_hora'], df_ph['valor'], 'g-')
-            ax.set_xlabel('Data/Hora')
-            ax.set_ylabel('pH')
-            ax.grid(True)
-            ax.set_ylim(0, 14)
-            plt.xticks(rotation=45)
-            plt.tight_layout()
-            st.pyplot(fig)
+#     with col2:
+#         if dados_ph:
+#             df_ph = pd.DataFrame(dados_ph)
+#             st.subheader("🧪 pH do Solo")
+#             fig, ax = plt.subplots(figsize=(10, 6))
+#             ax.plot(df_ph['data_hora'], df_ph['valor'], 'g-')
+#             ax.set_xlabel('Data/Hora')
+#             ax.set_ylabel('pH')
+#             ax.grid(True)
+#             ax.set_ylim(0, 14)
+#             plt.xticks(rotation=45)
+#             plt.tight_layout()
+#             st.pyplot(fig)
             
-            # Estatísticas
-            media_ph = df_ph['valor'].mean()
-            st.metric("pH Médio", f"{media_ph:.2f}")
+#             # Estatísticas
+#             media_ph = df_ph['valor'].mean()
+#             st.metric("pH Médio", f"{media_ph:.2f}")
 
-else:
-    st.warning("Nenhum dado encontrado para o período selecionado.")
+# else:
+#     st.warning("Nenhum dado encontrado para o período selecionado.")
 
-st.markdown("---")
-st.markdown("**Para funcionalidades avançadas de Machine Learning, execute:**")
-st.code("streamlit run app/scripts/dashboard_ml.py")
+# st.markdown("---")
+# st.markdown("**Para funcionalidades avançadas de Machine Learning, execute:**")
+# st.code("streamlit run app/scripts/dashboard_ml.py")
 
 
 # RESPOSTA PARA AS PERGUNTAS:

@@ -16,7 +16,7 @@ sys.path.insert(0, BASE_DIR)
 
 from config import Config
 from app.services.sql_db_service import SQLDatabaseService
-from app.ml.irrigation_predictor_old import IrrigationPredictor
+from app.ml.irrigation_predictor import IrrigationPredictor
 
 def evaluate_model_drift():
     """
