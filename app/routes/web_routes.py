@@ -311,6 +311,28 @@ def iniciar_streamlit_dashboard():
         #webbrowser.open('http://localhost:8501')
     except Exception as e:
         print(f"Erro ao iniciar Streamlit: {str(e)}")
+        
+def iniciar_streamlit_dashboard_ml():
+    """Função para iniciar o dashboard-ml Streamlit em segundo plano"""
+    script_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'scripts', 'dashboard_ml.py')
+    
+    # Verificar se o processo já está em execução
+    try:
+        # Iniciar o processo Streamlit
+        process = subprocess.Popen(
+            ["streamlit", "run", script_path], 
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        
+        # Aguardar para garantir que o servidor inicie
+        time.sleep(3)
+        
+        # Opcional: abrir o navegador automaticamente
+        #webbrowser.open('http://localhost:8501')
+    except Exception as e:
+        print(f"Erro ao iniciar Streamlit: {str(e)}")
 
 @web_bp.route('/iniciar-dashboard')
 def iniciar_dashboard():
@@ -338,3 +360,17 @@ def iniciar_dashboard():
     #     # Redirecionar para a página de sensores com mensagem
     #     flash('Dashboard está sendo iniciado. Aguarde um momento...', 'info')
     #     return redirect(url_for('sensores.index'))
+    
+@web_bp.route('/iniciar-dashboard-ml')
+def iniciar_dashboard_ml():
+    """Rota para iniciar o dashboard Streamlit"""
+    # Iniciar o dashboard em uma thread para não bloquear a resposta HTTP
+    thread = threading.Thread(target=iniciar_streamlit_dashboard_ml)
+    thread.daemon = True
+    thread.start()
+    
+    return jsonify({
+        "sucesso": True,
+        "mensagem": "Dashboard iniciado com sucesso",
+        "url": "http://localhost:8501"
+    })

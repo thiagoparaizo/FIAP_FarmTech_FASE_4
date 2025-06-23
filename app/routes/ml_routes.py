@@ -26,7 +26,7 @@ def train_model():
         "sensor_id": 1,
         "days_back": 30,
         "min_samples": 50,
-        "location": "-23.5505,-46.6333"
+        "location": "-3.763081,-38.524465"
     }
     """
     try:
@@ -36,7 +36,7 @@ def train_model():
         sensor_id = data.get('sensor_id')
         days_back = data.get('days_back', 30)
         min_samples = data.get('min_samples', 50)
-        location = data.get('location', '-23.5505,-46.6333')
+        location = data.get('location', '-3.763081,-38.524465')
         
         # Validações
         if not sensor_id:
@@ -89,7 +89,7 @@ def predict_irrigation():
         "potassio": 0,
         "temperature": 28.5,
         "humidity_air": 75,
-        "location": "-23.5505,-46.6333"
+        "location": "-3.763081,-38.524465"
     }
     """
     try:

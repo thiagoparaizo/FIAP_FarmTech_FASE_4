@@ -32,7 +32,7 @@ def gerar_dados_balanceados_realistas():
         # Limpar dados antigos
         print("🧹 Limpando dados antigos...")
         from sqlalchemy import text
-        session.execute(text("DELETE FROM leitura_sensor WHERE sensor_id IN (1, 2, 3)"))
+        session.execute(text("DELETE FROM leitura_sensor WHERE sensor_id > 0"))
         session.commit()
         
         registros = []

@@ -321,7 +321,7 @@ def dashboard_predicoes_ml(sensor_id, periodo):
         return
     
     # Obter dados climáticos atuais
-    dados_clima = climate_service.get_current_weather(-23.5505, -46.6333)  # São Paulo
+    dados_clima = climate_service.get_current_weather(-3.763081, -38.524465)  # Fortaleza
     
     # Fazer predição
     predicao = predictor.predict_irrigation_with_weather(dados_atuais, dados_clima)
@@ -553,12 +553,12 @@ def dashboard_analises_avancadas(sensor_id, periodo):
 def dashboard_climatico(sensor_id, periodo):
     st.header("🌤️ Integração Climática")
     
-    # Coordenadas (São Paulo como padrão)
+    # Coordenadas (Fortaleza como padrão)
     col1, col2 = st.columns(2)
     with col1:
-        lat = st.number_input("📍 Latitude", value=-23.5505, format="%.4f")
+        lat = st.number_input("📍 Latitude", value=-3.763081, format="%.4f")
     with col2:
-        lon = st.number_input("📍 Longitude", value=-46.6333, format="%.4f")
+        lon = st.number_input("📍 Longitude", value=-38.524465, format="%.4f")
     
     # Dados climáticos atuais
     st.subheader("☀️ Condições Atuais")

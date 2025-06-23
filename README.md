@@ -32,7 +32,35 @@ Esta aplicação web leve implementada em Python integra controle de produção,
 [Veja a Análise e Modelo de Dados usados no Sistema](doc/farmtech_modelagem_dados.md)
 
 
-## 🚀 Novas Funcionalidades Implementadas
+## 🚀 **Novas Funcionalidades Implementadas FASE 4**
+
+### **Machine Learning e Inteligência Artificial**
+- **Modelos Preditivos**: RandomForestClassifier para decisões de irrigação e RandomForestRegressor para predição de umidade
+- **Ensemble Learning**: Algoritmo robusto que combina múltiplas árvores de decisão, ideal para dados agrícolas
+- **Balanceamento Automático**: Sistema detecta e corrige automaticamente problemas de classes desbalanceadas
+- **Feature Engineering**: Engenharia de características avançada incluindo dados temporais e climáticos
+- **Predições com Confiança**: Intervalos de confiança e análise de incerteza nas predições
+- **Retreinamento Automático**: Sistema de retreinamento baseado em drift detection
+
+### **Dashboard Streamlit Avançado**
+- **Análises Preditivas**: Interface interativa para predições de irrigação em tempo real
+- **Recomendações Inteligentes**: Sugestões contextuais baseadas em análise integrada de sensores
+- **Análise de Tendências**: Monitoramento de padrões temporais e identificação de anomalias
+- **Importância das Variáveis**: Visualização de quais sensores mais influenciam as decisões
+- **Matriz de Correlação**: Análise de relacionamentos entre variáveis do sistema
+- **Distribuições Estatísticas**: Histogramas e estatísticas descritivas dos dados
+- **Padrões Temporais**: Identificação de ciclos diários e sazonais
+
+### **APIs de Machine Learning**
+- **Endpoint de Predição**: `/api/ml/predict` para predições em tempo real
+- **Status do Modelo**: `/api/ml/status` para verificar métricas e estado do modelo
+- **Treinamento via API**: `/api/ml/train` para retreinamento programático
+- **Avaliação de Performance**: `/api/ml/evaluate` para análise de drift do modelo
+- **Integração RESTful**: APIs completas para integração com sistemas externos
+
+
+
+## 🚀 Novas Funcionalidades Implementadas FASE 3
 
 ### Sistema de Sensores Físicos (ESP32)
 - **Integração com ESP32**: Sistema completo de monitoramento com sensores simulados no Wokwi
@@ -107,6 +135,7 @@ FIAP-CAP1_FARMTECH_PY/
 │   │   ├── api_routes.py       # Endpoints da API
 │   │   ├── sensor_routes.py    # Rotas para o sistema de sensores
 │   │   └── catalogo_routes.py  # Rotas para o catálogo de fabricantes/modelos
+│   │   ├── ml_routes.py       # Endpoints da API para operações e fnuções do Machine Learning (ML)
 │   │
 │   ├── models/
 │   │   ├── __init__.py
@@ -127,8 +156,13 @@ FIAP-CAP1_FARMTECH_PY/
 │   │
 │   ├── scripts/               # 🆕 Scripts utilitários
 │   │   ├── dashboard.py       # Dashboard Streamlit
+│   │   ├── dashboard_modelo_ml.py  # Dashboard Streamlit do modelo ML
 │   │   ├── importar_dados_esp32.py # Script de importação CSV
 │   │   └── limpar_dados_sensor.py  # Limpeza de dados
+│   │   └── fix_model_train.py  # algoritimo para ajuste nos dados de treinamento
+│   │   └── train_model.py      # algoritimo de treinamento do modelo ML
+│   │   └── gerar_dados_realistas.py  # algoritimo para gerar dados realistas (dados sinteticos)
+│   │   └── verificar_distribuicao_dados.py  # algoritimo para verificar a distribuicao dos dados de treinamento
 │   │
 │   ├── static/
 │   │   ├── css/style.css       # Estilos personalizados
@@ -158,13 +192,24 @@ FIAP-CAP1_FARMTECH_PY/
 │       │   └── detalhe_modelo.html     # Detalhes do modelo
 │       └── modo_simplificado.html # Modo Simplificado - Interface terminal
 │
-├── wokwi/                     # 🆕 Projeto ESP32
+├── wokwi/                    # 🆕 Projeto ESP32
+│   ├── screnshots/           # imagens screnshots
 │   ├── sketch.ino            # Código do ESP32
+|   ├── libraries.txt         # Bibliotecas do ESP32
 │   ├── diagram.json          # Circuito Wokwi
 │   └── README.md             # Documentação do circuito
 │
 ├── cli/
 │   └── cli_app.py              # Interface de linha de comando
+|
+├── logs/
+│   └──                         # logs de treinamento
+|
+├── models/
+│   └──                         # Arquivos de treinamento do modelo
+|
+├── doc/
+│   └──                         # Arquivos de documentação, dados de exemplos (esp32), screenshots, etc
 │
 ├── config.py                   # Configurações da aplicação
 ├── requirements.txt            # Dependências do projeto
@@ -499,6 +544,22 @@ Suporta cálculos para diferentes geometrias:
 - Comandos para listar, visualizar e calcular dados
 - Exportação de dados para análise em R
 
+### **4.10 Sistema de Machine Learning**
+- **Predição Inteligente de Irrigação**: Análise de múltiplas variáveis (umidade, pH, nutrientes, clima)
+- **Modelos Ensemble**: RandomForest com robustez contra overfitting e interpretabilidade
+- **Dados Climáticos Integrados**: Enriquecimento com dados meteorológicos da OpenWeather API
+- **Balanceamento Automático**: Detecção e correção de problemas de treinamento
+- **Avaliação Contínua**: Monitoramento de drift e qualidade dos modelos
+- **Recomendações Contextuais**: Sugestões inteligentes baseadas em análise integrada
+
+### **4.11 Dashboard de Análise Avançada**
+- **Interface Streamlit**: Dashboard interativo para análise ML
+- **Predições em Tempo Real**: Teste de cenários e análise de resultados
+- **Visualizações Avançadas**: Gráficos de correlação, distribuições e tendências
+- **Métricas de Performance**: Acurácia, precisão, recall e importância das features
+- **Análise Exploratória**: Ferramentas para entendimento profundo dos dados
+
+
 ## 5. APIs
 
 ### 5.1 API de Culturas
@@ -540,6 +601,14 @@ Suporta cálculos para diferentes geometrias:
 
 - 🆕 `GET /sensores/api/verificar-irrigacao-clima/<campo_id>`: Verifica necessidade de irrigação com dados climáticos
 - 🆕 `POST /sensores/api/ativar-irrigacao/<campo_id>`: Ativa sistema de irrigação
+
+### **5.6 API de Machine Learning**
+- `GET /api/ml/status`: Verifica status e métricas do modelo
+- `POST /api/ml/predict`: Realiza predições com dados atuais
+- `POST /api/ml/train`: Inicia treinamento com parâmetros personalizados
+- `POST /api/ml/retrain`: Agenda retreinamento automático
+- `POST /api/ml/evaluate`: Avalia performance do modelo
+
 
 ## 6. Tecnologias Utilizadas
 
@@ -583,6 +652,18 @@ Suporta cálculos para diferentes geometrias:
 
 - **Docker**: Contêinerização da aplicação
 - **Docker Compose**: Orquestração de múltiplos contêineres
+
+### **6.7 Machine Learning**
+- **Scikit-learn**: Biblioteca principal para modelos de ML
+- **Pandas/NumPy**: Processamento e análise de dados
+- **Joblib**: Serialização e carregamento de modelos
+- **Matplotlib/Seaborn**: Visualizações estatísticas
+- **SciPy**: Computação científica avançada
+
+### **6.8 Dashboard e Análise**
+- **Streamlit**: Interface interativa para análise ML
+- **Plotly**: Gráficos interativos avançados
+- **Streamlit-autorefresh**: Atualizações em tempo real
 
 ## 7. Guia de Implantação
 
@@ -697,6 +778,29 @@ OPENWEATHER_API_KEY=sua_chave_openweather_aqui
     flask run
     
     ```
+
+## 🚀 **Execução - COMANDOS**
+
+### **Dashboard ML Streamlit:**
+```bash
+# Iniciar dashboard de análise ML
+streamlit run app/scripts/dashboard_ml.py
+
+# Acesso: http://localhost:8501
+```
+
+### **Treinamento de Modelos:**
+```bash
+# Treinamento básico
+python app/scripts/train_model.py
+
+# Treinamento com parâmetros personalizados
+python app/scripts/train_model.py --days 60 --min-samples 100
+
+# Corrigir problemas de dados balanceados
+python app/scripts/fix_model_training.py
+```
+
     
 
 ## 8. Próximos Desenvolvimentos
@@ -740,6 +844,14 @@ O EasyAgro está em evolução constante, com módulos adicionais planejados par
 - **Material de Treinamento**: guias e vídeos explicativos
 - **Gamificação**: sistema de recompensas para engajamento contínuo
 
+### **8.6 Inteligência Artificial Avançada**
+- **Deep Learning**: Redes neurais para padrões complexos
+- **Computer Vision**: Análise de imagens de plantações via drones
+- **NLP para Agricultura**: Processamento de relatórios e recomendações
+- **IoT Intelligence**: Fusão de dados de múltiplos sensores
+- **Previsão Sazonal**: Modelos preditivos de longo prazo
+- **Otimização Automática**: Ajuste automático de parâmetros de irrigação
+
 ## 9. Exemplos de Uso
 
 ### 9.1 Exemplo - Sistema de Cultura e Campo
@@ -762,6 +874,36 @@ O EasyAgro está em evolução constante, com módulos adicionais planejados par
 2. Visualizar modelos disponíveis por tipo
 3. Comparar especificações técnicas
 4. Verificar compatibilidade com o sistema
+
+### **9.4 Exemplo - Sistema de Machine Learning**
+
+1. **Gerar dados balanceados para treinamento:**
+```bash
+python app/scripts/fix_model_training.py
+```
+
+2. **Treinar modelo com dados históricos:**
+```bash
+python app/scripts/train_model.py --days 30 --min-samples 20
+```
+
+3. **Verificar status do modelo via API:**
+```bash
+curl http://localhost:5000/api/ml/status
+```
+
+4. **Fazer predição de irrigação:**
+```bash
+curl -X POST http://localhost:5000/api/ml/predict \
+  -H "Content-Type: application/json" \
+  -d '{"umidade": 25.5, "ph": 6.8, "fosforo": 1, "potassio": 0}'
+```
+
+5. **Acessar dashboard de análise:**
+```bash
+streamlit run app/scripts/dashboard_ml.py
+# Acesse: http://localhost:8501
+```
 
 ## 10. Resolução de Problemas
 

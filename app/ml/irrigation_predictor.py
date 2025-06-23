@@ -303,7 +303,7 @@ class IrrigationPredictor:
     
     # ========== MÉTODOS PRINCIPAIS (mantidos da implementação anterior) ==========
     
-    def enrich_with_climate_data(self, sensor_data, lat=-23.5505, lon=-46.6333):
+    def enrich_with_climate_data(self, sensor_data, lat=-3.763081, lon=-38.524465):
         """
         Enriquece dados dos sensores com informações climáticas históricas
         """

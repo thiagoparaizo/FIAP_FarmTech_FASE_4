@@ -54,7 +54,7 @@ def main():
                        help='Dias de dados históricos para treinamento (padrão: 30)')
     parser.add_argument('--min-samples', type=int, default=50,
                        help='Número mínimo de amostras necessárias (padrão: 50)')
-    parser.add_argument('--location', type=str, default='-23.5505,-46.6333',
+    parser.add_argument('--location', type=str, default='-3.763081,-38.524465',
                        help='Coordenadas lat,lon para dados climáticos (padrão: São Paulo)')
     parser.add_argument('--save-models', action='store_true', default=True,
                        help='Salvar modelos treinados em disco')
